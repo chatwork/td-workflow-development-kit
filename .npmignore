@@ -4,5 +4,4 @@
 .circleci/
 
 # Source directories
-src/
 test/

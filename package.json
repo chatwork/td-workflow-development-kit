@@ -10,7 +10,7 @@
     "lint": "eslint --fix src/*.ts",
     "test": "jest --passWithNoTests",
     "build": "npm run lint && npm run test && webpack",
-    "install": "webpack",
+    "install": "webpack --config ./webpack.config.js",
     "setup": "npm link"
   },
   "repository": {

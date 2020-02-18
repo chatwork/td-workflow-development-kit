@@ -1,0 +1,5 @@
+.DS_Store
+
+# Source directories
+src/
+test/

@@ -1,0 +1,68 @@
+{
+  "name": "td-workflow-development-kit",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "bin": {
+    "td-wdk": "./bin/main.js"
+  },
+  "scripts": {
+    "lint": "eslint --fix src/*.ts",
+    "test": "jest --passWithNoTests",
+    "build": "webpack",
+    "build:app": "npm run lint && npm run test && npm run build",
+    "setup": "npm link"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chatwork/td-workflow-development-kit.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chatwork/td-workflow-development-kit/issues"
+  },
+  "homepage": "https://github.com/chatwork/td-workflow-development-kit#readme",
+  "devDependencies": {
+    "@types/jest": "^25.1.2",
+    "@types/node": "^13.7.1",
+    "@types/yargs": "^15.0.3",
+    "@typescript-eslint/eslint-plugin": "^2.20.0",
+    "@typescript-eslint/parser": "^2.20.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-jest": "^23.7.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "jest": "^25.1.0",
+    "prettier": "^1.19.1",
+    "ts-jest": "^25.2.0",
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.7.5",
+    "webpack": "^4.41.6",
+    "webpack-cli": "^3.3.11"
+  },
+  "jest": {
+    "globals": {
+      "SpreadsheetApp": {},
+      "PropertiesService": {},
+      "Logger": {},
+      "Moment": {},
+      "ChatWorkClient": {}
+    },
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(tests?/.+(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
+  },
+  "dependencies": {
+    "yargs": "^15.1.0"
+  }
+}

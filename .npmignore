@@ -1,5 +1,8 @@
 .DS_Store
 
+# CI/CD directories
+.circleci/
+
 # Source directories
 src/
 test/

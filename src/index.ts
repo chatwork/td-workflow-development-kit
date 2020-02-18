@@ -1,7 +1,7 @@
 import * as yargs from 'yargs';
 const argv = yargs.argv;
 
-const num: number = +argv._[0];
+const num = Number(argv._[0]);
 
 function fizzbuzz(num: number): string {
   if (num % 15 == 0) {

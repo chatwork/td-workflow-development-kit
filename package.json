@@ -1,7 +1,7 @@
 {
   "name": "td-workflow-development-kit",
   "version": "1.0.0",
-  "description": "",
+  "description": "TreasureData Workflow Development Kit",
   "bin": {
     "td-wdk": "./bin/main.js"
   },

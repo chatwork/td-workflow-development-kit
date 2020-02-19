@@ -30,8 +30,11 @@ jobs:
       - run: npm run build
 
       # Test package install
-      - run: cd ../
-      - run: mkdir test
-      - run: cd test
-      - run: npm init -yes
-      - run: npm install chatwork/td-workflow-development-kit#$CIRCLE_BRANCH
+      - run:
+          name: Test package install
+          command: |
+            cd ../
+            mkdir test
+            cd test
+            npm init -yes
+            npm install chatwork/td-workflow-development-kit#$CIRCLE_BRANCH

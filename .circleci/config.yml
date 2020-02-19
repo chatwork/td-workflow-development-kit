@@ -2,134 +2,44 @@
 #
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
 #
-version: 2.1
-
-commands:
-  chatwork_notify:
-    description: Chatworkへ通知する
-    parameters:
-      token:
-        description: Enter either your token value or use the CircleCI UI to add your token under the 'CHATWORK_TOKEN' env var
-        type: string
-        default: ${CHATWORK_TOKEN}
-      message:
-        description: Enter custom message.
-        type: string
-        default: Your job on CircleCI has completed.
-      room_id:
-        description: Enter room id.
-        type: integer
-      when:
-        description: 'Takes the following values: always, on_success, on_fail (default: on_success). see: https://circleci.com/docs/ja/2.0/configuration-reference/#when-%E5%B1%9E%E6%80%A7'
-        type: string
-        default: on_success
-    steps:
-      - run:
-          name: Chatwork Notification
-          when: << parameters.when >>
-          command: |
-            if [ -z "<< parameters.room_id >>" ]; then
-              echo "NO ROOM ID SET"
-              exit 1
-            fi
-            if [ -z "<< parameters.token >>" ]; then
-              echo "NO CHATWORK TOKEN SET"
-              exit 1
-            fi
-            echo Notify to Chatwork
-            curl -X POST -H "X-ChatWorkToken: << parameters.token >>" -d "body=<< parameters.message >>" "https://api.chatwork.com/v2/rooms/<< parameters.room_id>>/messages"
-
-references:
-  container_config: &container_config
+version: 2
+jobs:
+  build:
     docker:
       - image: circleci/node:10.15.3
     working_directory: /home/circleci/project
-
-  node_modules_cache_params: &node_modules_cache_params
-    key:
-      - v1-dependencies-{{ checksum "package.json" }}
-      # fallback to using the latest cache if no exact match is found
-      - v1-dependencies-
-    paths:
-      - node_modules
-
-aliases:
-  - &update_npm
-    name: Update npm module.
-    command: sudo npm install -g npm@latest
-
-  - &show_information
-    name: Show system information.
-    command: |
-      echo "Node $(node -v)"
-      echo "Npm $(npm -v)"
-
-  - &install
-    name: Install
-    command: npm install
-
-  - &build
-    name: Build
-    command: npm run build
-
-  - &package_install_test
-    name: Package install test
-    command: |
-      cd ../
-      mkdir test
-      cd test
-      npm init -yes
-      npm install chatwork/td-workflow-development-kit#$CIRCLE_BRANCH
-
-jobs:
-  build:
-    <<: *container_config
     steps:
       - checkout
-      - run: *update_npm
-      - run: *show_information
-      - restore_cache:
-        name: Restore Cache.
-        <<: *node_modules_cache_params
-      - run: *install
-      - save_cache:
-        name: Saving Cache.
-        <<: *node_modules_cache_params
-      - run: *build
-      - run: *package_install_test
-  build_master:
-    <<: *container_config
-    steps:
-      - checkout
-      - run: *update_npm
-      - run: *show_information
-      - restore_cache:
-        name: Restore Cache.
-        <<: *node_modules_cache_params
-      - run: *install
-      - save_cache:
-        name: Saving Cache.
-        <<: *node_modules_cache_params
-      - run: *build
-      - run: *package_install_test
-      - chatwork_notify:
-          message: '[info][title](clap)td-workflow-development-kit のビルドに成功しました。(clap)[/title]${CIRCLE_BUILD_URL}[/info]'
-          room_id: 162667490
-      - chatwork_notify:
-          message: '[info][title][toall];(td-workflow-development-kit のビルドに失敗しました。;([/title]${CIRCLE_BUILD_URL}[/info]'
-          room_id: 162667490
-          when: on_fail
 
-workflows:
-  build_workflow:
-    jobs:
-      - build:
-          filters:
-            branches:
-              ignore: master
-  build_master_workflow:
-    jobs:
-      - build_master:
-          filters:
-            branches:
-              only: master
+      - run:
+          name: NPM Update
+          command: sudo npm install -g npm@latest
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run:
+          name: Install
+          command: npm install
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+
+      - run:
+          name: Build
+          command: npm run build
+
+      - run:
+          name: Package install test
+          command: |
+            cd ../
+            mkdir test
+            cd test
+            npm init -yes
+            npm install chatwork/td-workflow-development-kit#$CIRCLE_BRANCH

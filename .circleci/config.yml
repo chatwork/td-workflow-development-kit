@@ -26,3 +26,10 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
 
       - run: npm run build
+
+      # Test package install
+      - run: cd ../
+      - run: mkdir test
+      - run: cd test
+      - run: npm init -yes
+      - run: npm install chatwork/td-workflow-development-kit#$CIRCLE_BRANCH

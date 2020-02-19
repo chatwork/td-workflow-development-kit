@@ -11,6 +11,8 @@ jobs:
     steps:
       - checkout
 
+      - run: sudo npm install -g npm@latest
+
       # Download and cache dependencies
       - restore_cache:
           keys:

@@ -4,19 +4,19 @@ import { File } from '../lib/FIle';
 
 export class APIKeyManager {
   constructor(
-    private location = `${
+    private file = `${
       process.env[process.platform == 'win32' ? 'USERPROFILE' : 'HOME'] // ホームディレクトリ
     }/.td-wdk`
   ) {}
 
   public set = (apiKey: string): void => {
-    const file = new File(this.location);
+    const file = new File(this.file);
     file.write(apiKey);
     return;
   };
 
   public get = (): string => {
-    const file = new File(this.location);
+    const file = new File(this.file);
     return file.read();
   };
 }

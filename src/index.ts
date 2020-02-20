@@ -1,17 +1,16 @@
-import * as yargs from 'yargs';
-const argv = yargs.argv;
+import { CommandLoader } from './cli/CommandLoader';
+import { Command } from 'commander';
+const program = new Command();
 
-const num = Number(argv._[0]);
+// バージョン情報
+program.version(require('../package.json').version || '1.0.0', '-v, --version');
 
-function fizzbuzz(num: number): string {
-  if (num % 15 == 0) {
-    return 'FizzBuzz';
-  } else if (num % 3 == 0) {
-    return 'Fizz';
-  } else if (num % 5 == 0) {
-    return 'Buzz';
+const commandLoader = new CommandLoader(program);
+commandLoader.load().then(() => {
+  program.parse(process.argv);
+
+  // For default, show help
+  if (program.args.length === 0) {
+    program.help();
   }
-  return num.toString();
-}
-
-console.log(fizzbuzz(num));
+});

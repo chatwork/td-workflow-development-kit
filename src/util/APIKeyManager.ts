@@ -9,14 +9,14 @@ export class APIKeyManager {
     }/.td-wdk`
   ) {}
 
+  public get = (): string => {
+    const file = new File(this.file);
+    return file.read();
+  };
+
   public set = (apiKey: string): void => {
     const file = new File(this.file);
     file.write(apiKey);
     return;
-  };
-
-  public get = (): string => {
-    const file = new File(this.file);
-    return file.read();
   };
 }

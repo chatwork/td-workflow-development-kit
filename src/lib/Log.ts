@@ -1,12 +1,6 @@
 import * as logSymbols from 'log-symbols';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-// 環境変数 TD_WDK_LOG の値が DEBUG 時のみログ出力
-export function debug(message: any): void {
-  if (process.env['TD_WDK_LOG'] !== 'DEBUG') return;
-  console.log(`[Debug]${message}`);
-}
-
 export function log(message: any): void {
   console.log(message);
 }

@@ -4,18 +4,26 @@
 
 ## Installation and Usage
 
-Install td-workflow-development-kit using [`npm`](https://www.npmjs.com/):
+Install td-workflow-development-kit using `npm`:
 
-```npm install chatwork/td-workflow-development-kit```
+```bash
+npm install chatwork/td-workflow-development-kit
+```
 
-Or [`yarn`](https://yarnpkg.com/en/package/jest):
+Or `yarn`:
 
-```yarn add chatwork/td-workflow-development-kit```
+```bash
+yarn add chatwork/td-workflow-development-kit
+```
 
 See help message for details.
 
-```td-wdk```
+```bash
+td-wdk
+```
 
 You need to authorize the account, before executing any other commands.
 
-```td-wdk set-api <Your API Key>```
+```bash
+td-wdk set-api <Your API Key>
+```

@@ -38,5 +38,9 @@ jobs:
       - run:
           name: Package install test
           command: |
-            sudo npm install -g chatwork/td-workflow-development-kit#$CIRCLE_BRANCH
-            td-wdk set-api hogehoge
+            cd ../
+            mkdir test
+            cd test
+            npm init -yes
+            npm install chatwork/td-workflow-development-kit#$CIRCLE_BRANCH
+            $(npm bin)/td-wdk set-api hogehoge

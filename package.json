@@ -1,0 +1,65 @@
+{
+  "name": "td-workflow-development-kit",
+  "version": "1.0.0",
+  "description": "TreasureData Workflow Development Kit",
+  "private" : true,
+  "bin": {
+    "td-wdk": "./bin/main.js"
+  },
+  "engines": {
+    "node": ">= 10.15.3",
+    "npm": ">= 6.13.4"
+  },
+  "scripts": {
+    "lint": "eslint --fix src/*.ts",
+    "test": "jest --passWithNoTests",
+    "build": "npm run clean && npm run lint && npm run test && tsc",
+    "install": "tsc",
+    "clean": "rimraf ./dist",
+    "setup": "npm link"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chatwork/td-workflow-development-kit.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chatwork/td-workflow-development-kit/issues"
+  },
+  "homepage": "https://github.com/chatwork/td-workflow-development-kit#readme",
+  "devDependencies": {
+    "@types/jest": "^25.1.2",
+    "@types/node": "^13.7.1",
+    "@typescript-eslint/eslint-plugin": "^2.20.0",
+    "@typescript-eslint/parser": "^2.20.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-jest": "^23.7.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "jest": "^25.1.0",
+    "prettier": "^1.19.1",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^25.2.0"
+  },
+  "jest": {
+    "globals": {},
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(tests?/.+(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
+  },
+  "dependencies": {
+    "@types/yargs": "15.0.3",
+    "typescript": "^3.7.5",
+    "yargs": "^15.1.0"
+  }
+}

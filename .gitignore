@@ -1,0 +1,19 @@
+.DS_Store
+
+# Editor
+.idea/
+.vscode/
+
+# Package directories
+node_modules
+jspm_packages
+
+# Python
+.venv
+__pycache__/
+
+# Build directories
+dist/
+
+# Coverage directories
+coverage/

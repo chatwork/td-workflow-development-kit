@@ -1,7 +1,7 @@
 import { Command } from 'commander';
 import { CommandInterface } from './CommandInterface';
 import * as Log from '../../lib/Log';
-import { APIKeyManager } from '../../util/APIKeyManager';
+import { APIKeyManager } from '../../lib/APIKeyManager';
 
 export class SetApiCommand implements CommandInterface {
   public command = (program: Command): void => {

@@ -1,7 +1,11 @@
 import * as fs from 'fs-extra';
+import * as path from 'path';
 
 export class File {
-  constructor(private file: string) {}
+  private file: string;
+  constructor(file: string) {
+    this.file = path.resolve(file);
+  }
 
   public read = (): string => {
     if (!fs.existsSync(this.file)) {
@@ -15,6 +19,7 @@ export class File {
   };
 
   public write = (input: string): void => {
+    fs.mkdirpSync(path.dirname(this.file));
     fs.writeFileSync(this.file, input + '\n'); // 空行を追加
     return;
   };

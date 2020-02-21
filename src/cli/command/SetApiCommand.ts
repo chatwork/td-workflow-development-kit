@@ -11,7 +11,6 @@ export class SetApiCommand implements CommandInterface {
       .action(apiKey => {
         this.run(apiKey);
       });
-    return;
   };
 
   private run = (apiKey: string): void => {
@@ -22,6 +21,5 @@ export class SetApiCommand implements CommandInterface {
     } catch (error) {
       Log.error('API-Key save failed.', error);
     }
-    return;
   };
 }

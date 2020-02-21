@@ -6,6 +6,5 @@ export class CommandLoader {
 
   public load = async (): Promise<void> => {
     new SetApiCommand().command(this.program);
-    return;
   };
 }

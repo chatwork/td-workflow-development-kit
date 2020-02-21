@@ -24,6 +24,5 @@ export class File {
   public write = (input: string): void => {
     fs.mkdirpSync(path.dirname(this.filePath));
     fs.writeFileSync(this.filePath, input + '\n'); // 空行を追加
-    return;
   };
 }

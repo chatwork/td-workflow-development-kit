@@ -17,6 +17,5 @@ export class APIKeyManager {
   public set = (apiKey: string): void => {
     const file = new File(this.filePath);
     file.write(apiKey);
-    return;
   };
 }

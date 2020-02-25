@@ -22,10 +22,8 @@ export class ConfigManager {
     return yaml.parse(file.read()) as Config;
   };
 
-  public init = (): void => {
-    const templateFile = new File(
-      path.resolve(__dirname, '../../') + '/assets/configTemplate.yaml'
-    );
+  public init = (templateFilePath = '/assets/configTemplate.yaml'): void => {
+    const templateFile = new File(path.resolve(__dirname, '../../') + templateFilePath);
 
     const file = new File(this.filePath);
     file.write(templateFile.read());

@@ -21,10 +21,9 @@ export class WorkspaceManager {
     workflowManager.init();
   };
 
-  private initIgnoreFile = (): void => {
-    const gitIgnoreTemplateFile = new File(
-      path.resolve(__dirname, '../../') + '/assets/gitignoreTemplate'
-    );
+  private initIgnoreFile = (templateFilePath = '/assets/gitignoreTemplate'): void => {
+    const gitIgnoreTemplateFile = new File(path.resolve(__dirname, '../../') + templateFilePath);
+
     const gitIgnoreFile = new File(this.directoryPath + '/.gitignore');
     gitIgnoreFile.write(gitIgnoreTemplateFile.read());
   };

@@ -8,7 +8,7 @@ import { WorkflowManager } from './WorkflowManager';
 export class WorkspaceManager {
   constructor(private directoryPath = `./td-wdk`) {}
 
-  public init = (): void => {
+  public create = (): void => {
     // make ConfigFile
     const configManager = new ConfigManager(this.directoryPath + '/config.yaml');
     configManager.init();

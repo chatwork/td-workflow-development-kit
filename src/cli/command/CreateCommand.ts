@@ -16,10 +16,10 @@ export class CreateCommand implements CommandInterface {
   private run = (): void => {
     try {
       const workspaceManager = new WorkspaceManager();
-      workspaceManager.init();
-      Log.success('Workspace initialized successfully.');
+      workspaceManager.create();
+      Log.success('Workspace created successfully.');
     } catch (error) {
-      Log.error('Workspace initialize failed.', error);
+      Log.error('Workspace create failed.', error);
     }
   };
 }

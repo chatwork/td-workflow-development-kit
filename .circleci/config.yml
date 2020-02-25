@@ -43,3 +43,4 @@ jobs:
             cd test
             npm init -yes
             npm install chatwork/td-workflow-development-kit#$CIRCLE_BRANCH
+            $(npm bin)/td-wdk set-api hogehoge

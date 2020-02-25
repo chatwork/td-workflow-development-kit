@@ -1,8 +1,8 @@
 {
   "name": "td-workflow-development-kit",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "TreasureData Workflow Development Kit",
-  "private" : true,
+  "private": true,
   "bin": {
     "td-wdk": "./bin/main.js"
   },
@@ -58,8 +58,11 @@
     ]
   },
   "dependencies": {
-    "@types/yargs": "15.0.3",
-    "typescript": "^3.7.5",
-    "yargs": "^15.1.0"
+    "@types/commander": "2.12.2",
+    "@types/fs-extra": "8.1.0",
+    "commander": "4.1.1",
+    "fs-extra": "8.1.0",
+    "log-symbols": "3.0.0",
+    "typescript": "^3.7.5"
   }
 }

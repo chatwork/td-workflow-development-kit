@@ -1,0 +1,10 @@
+projectName: 'sample-project'
+env:
+  prd:
+    td:
+      database: 'sample-db'
+      table: 'sample-table'
+  dev:
+    td:
+      database: 'test-db'
+      table: 'test-table'

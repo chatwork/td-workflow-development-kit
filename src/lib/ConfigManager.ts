@@ -1,3 +1,4 @@
+import * as path from 'path';
 import * as yaml from 'yaml';
 import { File } from './FIle';
 
@@ -22,25 +23,11 @@ export class ConfigManager {
   };
 
   public init = (): void => {
-    const template: Config = {
-      projectName: 'sample-project',
-      env: {
-        prd: {
-          td: {
-            database: 'sample-db',
-            table: 'sample-table'
-          }
-        },
-        dev: {
-          td: {
-            database: 'test-db',
-            table: 'test-table'
-          }
-        }
-      }
-    };
+    const templateFile = new File(
+      path.resolve(__dirname, '../../') + '/assets/configTemplate.yaml'
+    );
 
     const file = new File(this.filePath);
-    file.write(yaml.stringify(template));
+    file.write(templateFile.read());
   };
 }

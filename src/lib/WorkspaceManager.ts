@@ -1,5 +1,7 @@
+import * as path from 'path';
 import { File } from './FIle';
 import { ConfigManager } from './ConfigManager';
+import { WorkflowManager } from './WorkflowManager';
 
 // cSpell:ignore gitignore
 
@@ -12,7 +14,14 @@ export class WorkspaceManager {
     configManager.init();
 
     // make .gitignore
+    const gitIgnoreTemplateFile = new File(
+      path.resolve(__dirname, '../../') + '/assets/gitignoreTemplate'
+    );
     const gitIgnoreFile = new File(this.directoryPath + '/.gitignore');
-    gitIgnoreFile.write('/dist');
+    gitIgnoreFile.write(gitIgnoreTemplateFile.read());
+
+    // make SampleWorkflowFile
+    const workflowManager = new WorkflowManager(this.directoryPath + '/src/sample.dig');
+    workflowManager.init();
   };
 }

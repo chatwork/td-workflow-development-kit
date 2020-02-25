@@ -7,7 +7,7 @@ export class CreateCommand implements CommandInterface {
   public command = (program: Command): void => {
     program
       .command('create')
-      .description('Create workspace.')
+      .description('Create workspace')
       .action(() => {
         this.run();
       });

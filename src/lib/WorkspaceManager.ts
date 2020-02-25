@@ -14,14 +14,18 @@ export class WorkspaceManager {
     configManager.init();
 
     // make .gitignore
+    this.initIgnoreFile();
+
+    // make SampleWorkflowFile
+    const workflowManager = new WorkflowManager(this.directoryPath + '/src/sample.dig');
+    workflowManager.init();
+  };
+
+  private initIgnoreFile = (): void => {
     const gitIgnoreTemplateFile = new File(
       path.resolve(__dirname, '../../') + '/assets/gitignoreTemplate'
     );
     const gitIgnoreFile = new File(this.directoryPath + '/.gitignore');
     gitIgnoreFile.write(gitIgnoreTemplateFile.read());
-
-    // make SampleWorkflowFile
-    const workflowManager = new WorkflowManager(this.directoryPath + '/src/sample.dig');
-    workflowManager.init();
   };
 }

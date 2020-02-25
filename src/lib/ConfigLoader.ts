@@ -18,6 +18,6 @@ export class ConfigLoader {
 
   public get = (): Config => {
     const file = new File(this.filePath);
-    return yaml.parse(file.read());
+    return yaml.parse(file.read()) as Config;
   };
 }

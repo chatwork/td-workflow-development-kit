@@ -1,6 +1,6 @@
 import * as path from 'path';
 import * as yaml from 'yaml';
-import { File } from './FIle';
+import { File } from './File';
 
 interface ConfigParameter {
   [key: string]: unknown;
@@ -23,7 +23,7 @@ export class ConfigManager {
   };
 
   public init = (templateFilePath = '/assets/configTemplate.yaml'): void => {
-    const templateFile = new File(path.resolve(__dirname, '../../') + templateFilePath);
+    const templateFile = new File(path.join(path.resolve(__dirname, '../../'), templateFilePath));
 
     const file = new File(this.filePath);
     file.write(templateFile.read());

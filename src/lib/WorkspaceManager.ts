@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { File } from './FIle';
+import { File } from './File';
 import { ConfigManager } from './ConfigManager';
 import { WorkflowManager } from './WorkflowManager';
 
@@ -8,21 +8,27 @@ import { WorkflowManager } from './WorkflowManager';
 export class WorkspaceManager {
   constructor(private directoryPath = `./td-wdk`) {}
 
-  public create = (): void => {
+  public create = (
+    configManager = new ConfigManager(this.directoryPath + '/config.yaml'),
+    workflowManager = new WorkflowManager(this.directoryPath + '/src/sample.dig'),
+    configFilePath = '/assets/configTemplate.yaml',
+    workflowFilePath = '/assets/workflowTemplate.dig',
+    gitignoreFilePath = '/assets/gitignoreTemplate'
+  ): void => {
     // make ConfigFile
-    const configManager = new ConfigManager(this.directoryPath + '/config.yaml');
-    configManager.init();
-
-    // make .gitignore
-    this.initIgnoreFile();
+    configManager.init(configFilePath);
 
     // make SampleWorkflowFile
-    const workflowManager = new WorkflowManager(this.directoryPath + '/src/sample.dig');
-    workflowManager.init();
+    workflowManager.init(workflowFilePath);
+
+    // make .gitignore
+    this.initIgnoreFile(gitignoreFilePath);
   };
 
   private initIgnoreFile = (templateFilePath = '/assets/gitignoreTemplate'): void => {
-    const gitIgnoreTemplateFile = new File(path.resolve(__dirname, '../../') + templateFilePath);
+    const gitIgnoreTemplateFile = new File(
+      path.join(path.resolve(__dirname, '../../'), templateFilePath)
+    );
 
     const gitIgnoreFile = new File(this.directoryPath + '/.gitignore');
     gitIgnoreFile.write(gitIgnoreTemplateFile.read());

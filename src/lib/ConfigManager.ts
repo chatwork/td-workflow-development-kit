@@ -6,20 +6,44 @@ interface ConfigParameter {
   [key: string]: unknown;
 }
 
-export interface Config {
+export type Config = OutputConfig;
+
+interface OutputConfig {
+  projectName: string;
+  param: ConfigParameter;
+}
+
+interface RawConfig {
   projectName: string;
   env: {
-    prd: ConfigParameter;
-    dev: ConfigParameter;
+    [env: string]: ConfigParameter;
   };
 }
 
 export class ConfigManager {
-  constructor(private filePath = `./td-wdk/config.yaml`) {}
+  private env: string;
+  constructor(private filePath = `./td-wdk/config.yaml`) {
+    if (process.env['TD_WDK_ENV']) {
+      this.env = process.env['TD_WDK_ENV'];
+    } else {
+      this.env = 'dev';
+    }
+  }
 
-  public get = (): Config => {
+  public get = (): OutputConfig => {
     const file = new File(this.filePath);
-    return yaml.parse(file.read()) as Config;
+    const rawConfig = yaml.parse(file.read()) as RawConfig;
+
+    if (!rawConfig.env[this.env]) {
+      throw new Error(
+        `Variable for specified environment does not exist. - '${process.env['TD_WDK_ENV']}'`
+      );
+    }
+
+    return {
+      projectName: rawConfig.projectName,
+      param: rawConfig.env[this.env]
+    };
   };
 
   public init = (templateFilePath = '/assets/configTemplate.yaml'): void => {

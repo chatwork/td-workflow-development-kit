@@ -9,7 +9,7 @@ export class File {
 
   public read = (): string => {
     if (!fs.existsSync(this.filePath)) {
-      throw new Error('File not found.');
+      throw new Error(`File not found. - '${this.filePath}'`);
     }
 
     return fs

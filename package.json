@@ -11,7 +11,7 @@
     "npm": ">= 6.13.4"
   },
   "scripts": {
-    "lint": "eslint --fix src/*.ts",
+    "lint": "eslint --fix src/**/*.ts && eslint --fix test/**/*.ts",
     "test": "jest --passWithNoTests",
     "build": "npm run clean && npm run lint && npm run test && tsc",
     "install": "tsc",

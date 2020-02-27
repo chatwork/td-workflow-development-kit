@@ -2,22 +2,29 @@ import * as path from 'path';
 import * as yaml from 'yaml';
 import { File } from './File';
 
-interface ConfigParameter {
-  [key: string]: unknown;
-}
-
 export type Config = OutputConfig;
 
 interface OutputConfig {
   projectName: string;
-  param: ConfigParameter;
+  param: ConfigOutputParameter;
+  rawParam: ConfigRawParameter;
 }
 
 interface RawConfig {
   projectName: string;
   env: {
-    [env: string]: ConfigParameter;
+    [env: string]: ConfigRawParameter;
   };
+}
+
+type ValueType = string | number | boolean;
+
+interface ConfigOutputParameter {
+  [key: string]: ValueType;
+}
+
+interface ConfigRawParameter {
+  [key: string]: ConfigRawParameter | ValueType;
 }
 
 export class ConfigManager {
@@ -42,8 +49,44 @@ export class ConfigManager {
 
     return {
       projectName: rawConfig.projectName,
-      param: rawConfig.env[this.env]
+      param: this.getConfigParameter(rawConfig.env[this.env]),
+      rawParam: rawConfig.env[this.env] // 設定ファイル内の構造そのまま
     };
+  };
+
+  private getConfigParameter = (rawConfig: ConfigRawParameter): ConfigOutputParameter => {
+    return this.getConfigParameterOfRecursion(rawConfig);
+  };
+
+  private getConfigParameterOfRecursion = (
+    input: ConfigRawParameter,
+    prefix = ''
+  ): ConfigOutputParameter => {
+    let output: ConfigOutputParameter = {};
+
+    Object.keys(input).forEach(key => {
+      const keyWithPrefix = prefix !== '' ? `${prefix}.${key}` : key;
+
+      // 設定ファイルは配列を受け付けない
+      if (Array.isArray(input[key]) === true) {
+        throw new Error(`Array not allowed. - '${keyWithPrefix}'`);
+      }
+
+      if (typeof input[key] === 'object' && Array.isArray(input[key]) === false) {
+        const subObject = this.getConfigParameterOfRecursion(
+          input[key] as ConfigRawParameter,
+          keyWithPrefix
+        );
+
+        output = Object.assign(output, subObject);
+      } else {
+        output = Object.assign(output, {
+          [keyWithPrefix]: input[key]
+        });
+      }
+    });
+
+    return output;
   };
 
   public init = (templateFilePath = '/assets/configTemplate.yaml'): void => {

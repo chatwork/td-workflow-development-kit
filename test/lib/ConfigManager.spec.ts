@@ -9,6 +9,10 @@ describe('ConfigManager', () => {
       const result: Config = {
         projectName: 'sample-project',
         param: {
+          'td.database': 'test-db',
+          'td.table': 'test-table'
+        },
+        rawParam: {
           td: {
             database: 'test-db',
             table: 'test-table'
@@ -27,8 +31,12 @@ describe('ConfigManager', () => {
 
       const result: Config = {
         projectName: 'sample-project',
+        // dev
         param: {
-          // dev
+          'td.database': 'test-db',
+          'td.table': 'test-table'
+        },
+        rawParam: {
           td: {
             database: 'test-db',
             table: 'test-table'
@@ -46,6 +54,10 @@ describe('ConfigManager', () => {
       const result: Config = {
         projectName: 'sample-project',
         param: {
+          'td.database': 'sample-db',
+          'td.table': 'sample-table'
+        },
+        rawParam: {
           td: {
             database: 'sample-db',
             table: 'sample-table'
@@ -84,6 +96,10 @@ describe('ConfigManager', () => {
       const result: Config = {
         projectName: 'sample-project',
         param: {
+          'td.database': 'test-db',
+          'td.table': 'test-table'
+        },
+        rawParam: {
           td: {
             database: 'test-db',
             table: 'test-table'

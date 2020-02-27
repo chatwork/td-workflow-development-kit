@@ -2,6 +2,7 @@ import * as path from 'path';
 import { ConfigManager, Config } from './ConfigManager';
 import { Directory } from './Directory';
 import { File } from './File';
+import * as Log from './Log';
 
 export class BuildManager {
   private srcPath = '/src';
@@ -15,11 +16,11 @@ export class BuildManager {
   public build = (): void => {
     const fileList = this.getSrcFileList();
 
-    console.log(fileList);
-
+    Log.log('');
     fileList.forEach(filePath => {
       this.buildFile(filePath);
     });
+    Log.log('');
   };
 
   private getSrcFileList = (): string[] => {
@@ -36,10 +37,11 @@ export class BuildManager {
 
     if (path.extname(filePath) === '.dig') {
       distFile.write(this.getReplacedFileData(srcData));
-      return;
+      Log.buildLog(filePath, `Builded`);
+    } else {
+      distFile.write(srcData);
+      Log.buildLog(filePath, `Copied`);
     }
-
-    distFile.write(srcData);
   };
 
   private getReplacedFileData = (fileData: string): string => {

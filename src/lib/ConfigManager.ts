@@ -7,13 +7,16 @@ export type Config = OutputConfig;
 interface OutputConfig {
   projectName: string;
   param: ConfigOutputParameter;
-  rawParam: ConfigRawParameter;
 }
 
 interface RawConfig {
-  projectName: string;
   env: {
-    [env: string]: ConfigRawParameter;
+    [env: string]: {
+      projectName: string;
+      param: {
+        [env: string]: ConfigRawParameter;
+      };
+    };
   };
 }
 
@@ -48,9 +51,8 @@ export class ConfigManager {
     }
 
     return {
-      projectName: rawConfig.projectName,
-      param: this.getConfigParameter(rawConfig.env[this.env]),
-      rawParam: rawConfig.env[this.env] // 設定ファイル内の構造そのまま
+      projectName: rawConfig.env[this.env].projectName,
+      param: this.getConfigParameter(rawConfig.env[this.env].param)
     };
   };
 

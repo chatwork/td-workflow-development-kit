@@ -1,10 +1,13 @@
-projectName: 'sample-project'
 env:
   prd:
-    td:
-      database: 'sample-db'
-      table: 'sample-table'
+    projectName: sample-project
+    param:
+      td:
+        database: sample-db
+        table: sample-table
   dev:
-    td:
-      database: 'test-db'
-      table: 'test-table'
+    projectName: sample-project-dev
+    param:
+      td:
+        database: test-db
+        table: test-table

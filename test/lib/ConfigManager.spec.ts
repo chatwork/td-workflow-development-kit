@@ -7,16 +7,10 @@ describe('ConfigManager', () => {
       process.env['TD_WDK_ENV'] = 'dev';
 
       const result: Config = {
-        projectName: 'sample-project',
+        projectName: 'sample-project-dev',
         param: {
           'td.database': 'test-db',
           'td.table': 'test-table'
-        },
-        rawParam: {
-          td: {
-            database: 'test-db',
-            table: 'test-table'
-          }
         }
       };
 
@@ -30,17 +24,11 @@ describe('ConfigManager', () => {
       execSync('unset TD_WDK_ENV');
 
       const result: Config = {
-        projectName: 'sample-project',
+        projectName: 'sample-project-dev',
         // dev
         param: {
           'td.database': 'test-db',
           'td.table': 'test-table'
-        },
-        rawParam: {
-          td: {
-            database: 'test-db',
-            table: 'test-table'
-          }
         }
       };
 
@@ -56,12 +44,6 @@ describe('ConfigManager', () => {
         param: {
           'td.database': 'sample-db',
           'td.table': 'sample-table'
-        },
-        rawParam: {
-          td: {
-            database: 'sample-db',
-            table: 'sample-table'
-          }
         }
       };
 
@@ -94,16 +76,10 @@ describe('ConfigManager', () => {
 
       const configManager = new ConfigManager('./test/lib/configManager/init.yaml');
       const result: Config = {
-        projectName: 'sample-project',
+        projectName: 'sample-project-dev',
         param: {
           'td.database': 'test-db',
           'td.table': 'test-table'
-        },
-        rawParam: {
-          td: {
-            database: 'test-db',
-            table: 'test-table'
-          }
         }
       };
 

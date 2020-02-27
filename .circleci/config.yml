@@ -45,3 +45,4 @@ jobs:
             npm install chatwork/td-workflow-development-kit#$CIRCLE_BRANCH
             $(npm bin)/td-wdk set-api hogehoge
             $(npm bin)/td-wdk create
+            $(npm bin)/td-wdk build

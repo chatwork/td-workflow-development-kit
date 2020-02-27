@@ -1,5 +1,6 @@
+import * as path from 'path';
 import * as yaml from 'yaml';
-import { File } from './FIle';
+import { File } from './File';
 
 interface ConfigParameter {
   [key: string]: unknown;
@@ -21,26 +22,10 @@ export class ConfigManager {
     return yaml.parse(file.read()) as Config;
   };
 
-  public init = (): void => {
-    const template: Config = {
-      projectName: 'sample-project',
-      env: {
-        prd: {
-          td: {
-            database: 'sample-db',
-            table: 'sample-table'
-          }
-        },
-        dev: {
-          td: {
-            database: 'test-db',
-            table: 'test-table'
-          }
-        }
-      }
-    };
+  public init = (templateFilePath = '/assets/configTemplate.yaml'): void => {
+    const templateFile = new File(path.join(path.resolve(__dirname, '../../'), templateFilePath));
 
     const file = new File(this.filePath);
-    file.write(yaml.stringify(template));
+    file.write(templateFile.read());
   };
 }

@@ -1,4 +1,4 @@
-import { File } from './FIle';
+import { File } from './File';
 
 // cSpell:ignore USERPROFILE
 

@@ -17,3 +17,6 @@ dist/
 
 # Coverage directories
 coverage/
+
+# Workspace directories
+/td-wdk

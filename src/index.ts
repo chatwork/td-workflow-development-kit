@@ -10,7 +10,10 @@ commandLoader.load().then(() => {
   program.parse(process.argv);
 
   // For default, show help
-  if (program.args.length === 0) {
+  const rawArgs = process.argv.filter(
+    argv => argv.indexOf('bin/node') === -1 && argv.indexOf('bin/td-wdk') === -1
+  );
+  if (rawArgs.length === 0) {
     program.help();
   }
 });

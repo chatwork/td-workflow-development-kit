@@ -1,4 +1,4 @@
-import { File } from '../../src/lib/FIle';
+import { File } from '../../src/lib/File';
 
 describe('File', () => {
   describe('read()', () => {

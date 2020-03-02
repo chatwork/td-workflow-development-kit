@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import { CommandInterface } from './CommandInterface';
-import * as Log from '../../lib/Log';
+import { Log } from '../../lib/Log';
 import { DeployManager } from '../../lib/DeployManager';
 
 export class DeployCommand implements CommandInterface {
@@ -14,12 +14,16 @@ export class DeployCommand implements CommandInterface {
   };
 
   private run = async (): Promise<void> => {
+    const log = new Log();
+    log.start('Deploying workflow...');
+
     try {
       const deployManager = new DeployManager();
       await deployManager.deploy();
-      Log.success('Workflow deployed successfully.');
+
+      log.succeed('Workflow deployed successfully.');
     } catch (error) {
-      Log.error('Workflow deploy failed.', error);
+      log.fail('Workflow deploy failed.', error);
     }
   };
 }

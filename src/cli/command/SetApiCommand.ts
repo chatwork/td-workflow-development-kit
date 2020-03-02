@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import { CommandInterface } from './CommandInterface';
-import * as Log from '../../lib/Log';
+import { Log } from '../../lib/Log';
 import { APIKeyManager } from '../../lib/APIKeyManager';
 
 export class SetApiCommand implements CommandInterface {
@@ -14,12 +14,16 @@ export class SetApiCommand implements CommandInterface {
   };
 
   private run = (apiKey: string): void => {
-    const apiKeyManager = new APIKeyManager();
+    const log = new Log();
+    log.start('Setting API Key...');
+
     try {
+      const apiKeyManager = new APIKeyManager();
       apiKeyManager.set(apiKey);
-      Log.success('API-Key saved successfully.');
+
+      log.succeed('API-Key saved successfully.');
     } catch (error) {
-      Log.error('API-Key save failed.', error);
+      log.fail('API-Key save failed.', error);
     }
   };
 }

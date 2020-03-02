@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import { CommandInterface } from './CommandInterface';
-import * as Log from '../../lib/Log';
+import { Log } from '../../lib/Log';
 import { BuildManager } from '../../lib/BuildManager';
 
 export class BuildCommand implements CommandInterface {
@@ -14,12 +14,16 @@ export class BuildCommand implements CommandInterface {
   };
 
   private run = (): void => {
+    const spinnerLog = new Log();
+    spinnerLog.start('Building workflow...');
+
     try {
-      const buildManager = new BuildManager();
+      const buildManager = new BuildManager(spinnerLog);
       buildManager.build();
-      Log.success('Workflow builded successfully.');
+
+      spinnerLog.succeed('Workflow builded successfully.');
     } catch (error) {
-      Log.error('Workflow build failed.', error);
+      spinnerLog.fail('Workflow build failed.', error);
     }
   };
 }

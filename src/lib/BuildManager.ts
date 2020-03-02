@@ -2,13 +2,17 @@ import * as path from 'path';
 import { ConfigManager, Config } from './ConfigManager';
 import { Directory } from './Directory';
 import { File } from './File';
-import * as Log from './Log';
+import { Log } from './Log';
 
 export class BuildManager {
   private srcPath = '/src';
   private distPath = '/dist';
   private config: Config;
-  constructor(private directoryPath = './td-wdk', configFilePath = './td-wdk/config.yaml') {
+  constructor(
+    private log: Log,
+    private directoryPath = './td-wdk',
+    configFilePath = './td-wdk/config.yaml'
+  ) {
     const configManager = new ConfigManager(configFilePath);
     this.config = configManager.get();
   }
@@ -16,11 +20,11 @@ export class BuildManager {
   public build = (): void => {
     const fileList = this.getSrcFileList();
 
-    Log.log('');
+    this.log.printText(``);
     fileList.forEach(filePath => {
       this.buildFile(filePath);
     });
-    Log.log('');
+    this.log.printText(``);
   };
 
   private getSrcFileList = (): string[] => {
@@ -37,10 +41,10 @@ export class BuildManager {
 
     if (path.extname(filePath) === '.dig') {
       distFile.write(this.getReplacedFileData(srcData));
-      Log.buildLog(filePath, `Builded`);
+      this.log.printBuildText(filePath, `Builded`);
     } else {
       distFile.write(srcData);
-      Log.buildLog(filePath, `Copied`);
+      this.log.printBuildText(filePath, `Copied`);
     }
   };
 

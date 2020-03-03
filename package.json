@@ -11,7 +11,7 @@
     "npm": ">= 6.13.4"
   },
   "scripts": {
-    "lint": "eslint --fix src/*.ts",
+    "lint": "eslint --fix src/**/*.ts && eslint --fix test/**/*.ts",
     "test": "jest --passWithNoTests",
     "build": "npm run clean && npm run lint && npm run test && tsc",
     "install": "tsc",
@@ -61,6 +61,7 @@
     "@types/commander": "2.12.2",
     "@types/fs-extra": "8.1.0",
     "@types/yaml": "1.2.0",
+    "chalk": "3.0.0",
     "commander": "4.1.1",
     "fs-extra": "8.1.0",
     "log-symbols": "3.0.0",

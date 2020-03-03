@@ -1,0 +1,7 @@
+_export:
+  td:
+    database: 'sample-db'
+    table: 'sample-table'
+
++task:
+  td>: 'SELECT * FROM ${td.table}'

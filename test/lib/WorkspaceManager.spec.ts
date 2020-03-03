@@ -14,9 +14,9 @@ describe('Workspace', () => {
       const configManager = new ConfigManager(directoryPath + '/config.yaml');
       const workflowManager = new WorkflowManager(directoryPath + '/src/sample.dig');
 
-      const configTemplateFilePath = './test/lib/workspaceManager/assets/configTemplate.yaml';
-      const workflowTemplateFilePath = './test/lib/workspaceManager/assets/workflowTemplate.dig';
-      const gitignoreTemplateFilePath = './test/lib/workspaceManager/assets/gitignoreTemplate';
+      const configTemplateFilePath = './test/assets/configTemplate.yaml';
+      const workflowTemplateFilePath = './test/assets/workflowTemplate.dig';
+      const gitignoreTemplateFilePath = './test/assets/gitignoreTemplate';
 
       workspaceManager.create(
         configManager,

@@ -13,13 +13,13 @@ export class File {
     }
 
     return fs
-      .readFileSync(this.filePath)
+      .readFileSync(this.filePath, { encoding: 'utf8' })
       .toString()
       .slice(0, -1); // 空行を削除
   };
 
   public write = (input: string): void => {
     fs.mkdirpSync(path.dirname(this.filePath));
-    fs.writeFileSync(this.filePath, input + '\n'); // 空行を追加
+    fs.writeFileSync(this.filePath, input + '\n', { encoding: 'utf8' }); // 空行を追加
   };
 }

@@ -2,6 +2,9 @@
 #
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
 #
+
+# cSpell:ignore circleci, mkdir
+
 version: 2
 jobs:
   build:

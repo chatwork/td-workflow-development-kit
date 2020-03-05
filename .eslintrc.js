@@ -20,9 +20,9 @@ module.exports = {
     sourceType: 'module'
   },
   env: {
-    browser: false,
+    browser: true,
     node: true,
-    es6: false
+    es6: true
   },
   rules: fileRules
 }

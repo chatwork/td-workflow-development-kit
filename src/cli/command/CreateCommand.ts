@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import { CommandInterface } from './CommandInterface';
-import * as Log from '../../lib/Log';
+import { Log } from '../../lib/Log';
 import { WorkspaceManager } from '../../lib/WorkspaceManager';
 
 export class CreateCommand implements CommandInterface {
@@ -14,12 +14,16 @@ export class CreateCommand implements CommandInterface {
   };
 
   private run = (): void => {
+    const log = new Log();
+    log.start('Creating workspace...');
+
     try {
       const workspaceManager = new WorkspaceManager();
       workspaceManager.create();
-      Log.success('Workspace created successfully.');
+
+      log.succeed('Workspace created successfully.');
     } catch (error) {
-      Log.error('Workspace create failed.', error);
+      log.fail('Workspace create failed.', error);
     }
   };
 }

@@ -12,10 +12,17 @@ export class File {
       throw new Error(`File not found. - '${this.filePath}'`);
     }
 
-    return fs
+    const readText = fs
       .readFileSync(this.filePath, { encoding: 'utf8' })
       .toString()
-      .slice(0, -1); // 空行を削除
+      .replace(/\r\n?/g, '\n'); // 改行コードを \n に統一する
+
+    // ファイルの最終文字が改行コードの場合はそれを削除する
+    if (readText.slice(-1) === '\n') {
+      return readText.slice(0, -1);
+    }
+
+    return readText;
   };
 
   public write = (input: string): void => {

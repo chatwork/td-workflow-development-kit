@@ -65,6 +65,8 @@
     "commander": "4.1.1",
     "fs-extra": "8.1.0",
     "log-symbols": "3.0.0",
+    "ora": "4.0.3",
+    "td-workflow-client": "github:chatwork/td-workflow-client#fed88ca5464253c8f7872fc3c91aebec9397e600",
     "typescript": "3.8.2",
     "yaml": "1.7.2"
   }

@@ -7,13 +7,13 @@
 Install td-workflow-development-kit using `npm`:
 
 ``` bash
-npm install chatwork/td-workflow-development-kit
+npm install -g chatwork/td-workflow-development-kit
 ```
 
 Or `yarn`:
 
 ``` bash
-yarn add chatwork/td-workflow-development-kit
+yarn global add chatwork/td-workflow-development-kit
 ```
 
 See help message for details.

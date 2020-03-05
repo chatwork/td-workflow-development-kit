@@ -1,9 +1,7 @@
+const prettierRule = require('./prettier.config');
+
 const fileRules = {
-  'prettier/prettier': ['warn', {
-    singleQuote: true,
-    semi: true,
-    printWidth: 100
-  }]
+  'prettier/prettier': ['warn', prettierRule]
 };
 
 module.exports = {

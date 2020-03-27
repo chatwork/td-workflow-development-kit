@@ -50,11 +50,9 @@ export class WorkspaceManager {
   };
 
   private initFile = (templateFilePath: string, targetPath: string): void => {
-    const gitIgnoreTemplateFile = new File(
-      path.join(path.resolve(__dirname, '../../'), templateFilePath)
-    );
+    const templateFile = new File(path.join(path.resolve(__dirname, '../../'), templateFilePath));
 
-    const gitIgnoreFile = new File(this.directoryPath + targetPath);
-    gitIgnoreFile.write(gitIgnoreTemplateFile.read());
+    const targetFile = new File(this.directoryPath + targetPath);
+    targetFile.write(templateFile.read());
   };
 }

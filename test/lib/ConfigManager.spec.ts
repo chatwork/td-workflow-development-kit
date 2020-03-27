@@ -9,8 +9,8 @@ describe('ConfigManager', () => {
       const result: Config = {
         projectName: 'sample-project-dev',
         param: {
-          'td.database': 'test-db',
-          'td.table': 'test-table'
+          'td.database': 'dev-db',
+          'td.table': 'dev-table'
         }
       };
 
@@ -27,8 +27,8 @@ describe('ConfigManager', () => {
         projectName: 'sample-project-dev',
         // dev
         param: {
-          'td.database': 'test-db',
-          'td.table': 'test-table'
+          'td.database': 'dev-db',
+          'td.table': 'dev-table'
         }
       };
 
@@ -60,8 +60,8 @@ describe('ConfigManager', () => {
         // config.yaml の env.test のパラメーター
         projectName: 'sample-project-test',
         param: {
-          'td.database': 'expect-db',
-          'td.table': 'expect-table'
+          'td.database': 'test-db',
+          'td.table': 'test-table'
         }
       };
 
@@ -96,8 +96,8 @@ describe('ConfigManager', () => {
       const result: Config = {
         projectName: 'sample-project-dev',
         param: {
-          'td.database': 'test-db',
-          'td.table': 'test-table'
+          'td.database': 'dev-db',
+          'td.table': 'dev-table'
         }
       };
 

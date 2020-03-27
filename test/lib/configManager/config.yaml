@@ -9,11 +9,11 @@ env:
     projectName: sample-project-dev
     param:
       td:
-        database: test-db
-        table: test-table
+        database: dev-db
+        table: dev-table
   test:
     projectName: sample-project-test
     param:
       td:
-        database: expect-db
-        table: expect-table
+        database: test-db
+        table: test-table

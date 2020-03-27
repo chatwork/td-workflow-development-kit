@@ -9,5 +9,11 @@ env:
     projectName: sample-project-dev
     param:
       td:
+        database: dev-db
+        table: dev-table
+  test:
+    projectName: sample-project-test
+    param:
+      td:
         database: test-db
         table: test-table

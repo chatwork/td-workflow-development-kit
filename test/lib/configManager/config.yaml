@@ -24,18 +24,17 @@ test:
   database: test-db
   envParam: test
   workflows:
-    - file: sample.dig
+    - filePath: sample.dig
   tables:
     - name: test-table
-      dataFile: csv/test-table.csv
-      schemaFile: schema/schema.yaml
+      dataFilePath: csv/test-table.csv
+      schemaFilePath: schema/schema.yaml
     - name: expect-table
-      dataFile: csv/expect-table.csv
-      schemaFile: schema/schema.yaml
+      dataFilePath: csv/expect-table.csv
+      schemaFilePath: schema/schema.yaml
   expects:
     - srcTable: result-test-table
       expectTable: expect-table
       columns:
-        - id
-        - account_id
         - name
+        - total

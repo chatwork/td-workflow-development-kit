@@ -2,14 +2,33 @@ import * as path from 'path';
 import * as yaml from 'yaml';
 import { File } from './File';
 
-export type Config = OutputConfig;
+export type Config = OutputParam;
+export type TestConfig = TestParam;
 
-interface OutputConfig {
+interface OutputParam {
   projectName: string;
   param: ConfigOutputParameter;
 }
 
-interface RawConfig {
+interface TestParam {
+  database: string;
+  envParam: string;
+  workflows: {
+    filePath: string;
+  }[];
+  tables: {
+    name: string;
+    dataFilePath: string;
+    schemaFilePath: string;
+  }[];
+  expects: {
+    srcTable: string;
+    expectTable: string;
+    columns: string[];
+  }[];
+}
+
+interface RawConfigData {
   env: {
     [env: string]: {
       projectName: string;
@@ -18,6 +37,7 @@ interface RawConfig {
       };
     };
   };
+  test: TestParam;
 }
 
 type ValueType = string | number | boolean;
@@ -40,10 +60,10 @@ export class ConfigManager {
     }
   }
 
-  public getWorkflowParam = (envOverride?: string): OutputConfig => {
+  public getWorkflowParam = (envOverride?: string): OutputParam => {
     const env = envOverride ? envOverride : this.env;
     const file = new File(this.filePath);
-    const rawConfig = yaml.parse(file.read()) as RawConfig;
+    const rawConfig = yaml.parse(file.read()) as RawConfigData;
 
     if (!rawConfig.env[env]) {
       throw new Error(
@@ -90,6 +110,17 @@ export class ConfigManager {
     });
 
     return output;
+  };
+
+  public getTestParam = (): TestParam => {
+    const file = new File(this.filePath);
+    const rawConfig = yaml.parse(file.read()) as RawConfigData;
+
+    if (!rawConfig.test) {
+      throw new Error(`Variable for specified test does not exist.`);
+    }
+
+    return rawConfig.test;
   };
 
   public init = (templateFilePath = '/assets/configTemplate.yaml'): void => {

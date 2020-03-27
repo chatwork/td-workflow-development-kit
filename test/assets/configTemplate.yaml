@@ -5,9 +5,36 @@ env:
       td:
         database: sample-db
         table: sample-table
+        result_table: result-sample-table
   dev:
     projectName: sample-project-dev
     param:
       td:
+        database: dev-db
+        table: dev-table
+        result_table: result-dev-table
+  test:
+    projectName: sample-project-test
+    param:
+      td:
         database: test-db
         table: test-table
+        result_table: result-test-table
+test:
+  database: test-db
+  envParam: test
+  workflows:
+    - filePath: sample.dig
+  tables:
+    - name: test-table
+      dataFilePath: csv/test-table.csv
+      schemaFilePath: schema/schema.yaml
+    - name: expect-table
+      dataFilePath: csv/expect-table.csv
+      schemaFilePath: schema/schema.yaml
+  expects:
+    - srcTable: result-test-table
+      expectTable: expect-table
+      columns:
+        - name
+        - total

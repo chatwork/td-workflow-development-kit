@@ -1,4 +1,4 @@
-import { WorkspaceManager } from '../../src/lib/WorkspaceManager';
+import { WorkspaceManager, CreateFilePaths } from '../../src/lib/WorkspaceManager';
 import { ConfigManager } from '../../src/lib/ConfigManager';
 import { WorkflowManager } from '../../src/lib/WorkflowManager';
 import { File } from '../../src/lib/File';
@@ -14,29 +14,48 @@ describe('Workspace', () => {
       const configManager = new ConfigManager(directoryPath + '/config.yaml');
       const workflowManager = new WorkflowManager(directoryPath + '/src/sample.dig');
 
-      const configTemplateFilePath = './test/assets/configTemplate.yaml';
-      const workflowTemplateFilePath = './test/assets/workflowTemplate.dig';
-      const gitignoreTemplateFilePath = './test/assets/gitignoreTemplate';
+      const configFilePath = './test/assets/configTemplate.yaml';
+      const workflowFilePath = './test/assets/workflowTemplate.dig';
+      const filePaths: CreateFilePaths = [
+        {
+          filePath: './test/assets/gitignoreTemplate',
+          targetPath: '/.gitignore'
+        },
+        {
+          filePath: './test/assets/testData/schemaTemplate.yaml',
+          targetPath: '/test/schema/schema.yaml'
+        },
+        {
+          filePath: './test/assets/testData/testDataTemplate.csv',
+          targetPath: '/test/csv/test-table.csv'
+        },
+        {
+          filePath: './test/assets/testData/expectDataTemplate.csv',
+          targetPath: '/test/csv/expect-table.csv'
+        }
+      ];
 
       workspaceManager.create(
         configManager,
         workflowManager,
-        configTemplateFilePath,
-        workflowTemplateFilePath,
-        gitignoreTemplateFilePath
+        configFilePath,
+        workflowFilePath,
+        filePaths
       );
 
-      const configTemplateFile = new File(configTemplateFilePath);
+      const configTemplateFile = new File(configFilePath);
       const configFile = new File('./test/lib/workspaceManager/td-wdk/config.yaml');
       expect(configTemplateFile.read()).toBe(configFile.read());
 
-      const workflowTemplateFile = new File(workflowTemplateFilePath);
+      const workflowTemplateFile = new File(workflowFilePath);
       const workflowFile = new File('./test/lib/workspaceManager/td-wdk/src/sample.dig');
       expect(workflowTemplateFile.read()).toBe(workflowFile.read());
 
-      const gitignoreTemplateFile = new File(gitignoreTemplateFilePath);
-      const gitignoreFile = new File('./test/lib/workspaceManager/td-wdk/.gitignore');
-      expect(gitignoreTemplateFile.read()).toBe(gitignoreFile.read());
+      filePaths.forEach(filePath => {
+        const templateFile = new File(filePath.filePath);
+        const file = new File('./test/lib/workspaceManager/td-wdk' + filePath.targetPath);
+        expect(templateFile.read()).toBe(file.read());
+      });
     });
   });
 });

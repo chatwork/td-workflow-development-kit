@@ -40,7 +40,7 @@ export class ConfigManager {
     }
   }
 
-  public get = (): OutputConfig => {
+  public getWorkflowParam = (): OutputConfig => {
     const file = new File(this.filePath);
     const rawConfig = yaml.parse(file.read()) as RawConfig;
 

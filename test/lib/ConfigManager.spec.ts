@@ -15,7 +15,7 @@ describe('ConfigManager', () => {
       };
 
       const configManager = new ConfigManager('./test/lib/configManager/config.yaml');
-      expect(configManager.get()).toEqual(result);
+      expect(configManager.getWorkflowParam()).toEqual(result);
 
       execSync('unset TD_WDK_ENV');
     });
@@ -33,7 +33,7 @@ describe('ConfigManager', () => {
       };
 
       const configManager = new ConfigManager('./test/lib/configManager/config.yaml');
-      expect(configManager.get()).toEqual(result);
+      expect(configManager.getWorkflowParam()).toEqual(result);
     });
 
     it('Success - prd', () => {
@@ -48,7 +48,7 @@ describe('ConfigManager', () => {
       };
 
       const configManager = new ConfigManager('./test/lib/configManager/config.yaml');
-      expect(configManager.get()).toEqual(result);
+      expect(configManager.getWorkflowParam()).toEqual(result);
 
       execSync('unset TD_WDK_ENV');
     });
@@ -59,7 +59,7 @@ describe('ConfigManager', () => {
       const configManager = new ConfigManager('./test/lib/configManager/config.yaml');
 
       expect(() => {
-        configManager.get();
+        configManager.getWorkflowParam();
       }).toThrowError(
         new Error(
           `Variable for specified environment does not exist. - '${process.env['TD_WDK_ENV']}'`
@@ -84,7 +84,7 @@ describe('ConfigManager', () => {
       };
 
       configManager.init();
-      expect(configManager.get()).toEqual(result);
+      expect(configManager.getWorkflowParam()).toEqual(result);
 
       execSync('unset TD_WDK_ENV');
     });

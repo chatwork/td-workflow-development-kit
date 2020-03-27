@@ -2,6 +2,9 @@ _export:
   td:
     database: '###td.database###'
     table: '###td.table###'
+    result_table: 'result_###td.table###'
 
 +task:
   td>: 'SELECT * FROM ${td.table}'
+  insert_into: ${td.result_table}
+  database: ${td.database}

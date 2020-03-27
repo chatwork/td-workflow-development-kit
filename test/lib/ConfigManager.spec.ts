@@ -10,7 +10,8 @@ describe('ConfigManager', () => {
         projectName: 'sample-project-dev',
         param: {
           'td.database': 'dev-db',
-          'td.table': 'dev-table'
+          'td.table': 'dev-table',
+          'td.result_table': 'result-dev-table'
         }
       };
 
@@ -28,7 +29,8 @@ describe('ConfigManager', () => {
         // dev
         param: {
           'td.database': 'dev-db',
-          'td.table': 'dev-table'
+          'td.table': 'dev-table',
+          'td.result_table': 'result-dev-table'
         }
       };
 
@@ -43,7 +45,8 @@ describe('ConfigManager', () => {
         projectName: 'sample-project',
         param: {
           'td.database': 'sample-db',
-          'td.table': 'sample-table'
+          'td.table': 'sample-table',
+          'td.result_table': 'result-sample-table'
         }
       };
 
@@ -61,7 +64,8 @@ describe('ConfigManager', () => {
         projectName: 'sample-project-test',
         param: {
           'td.database': 'test-db',
-          'td.table': 'test-table'
+          'td.table': 'test-table',
+          'td.result_table': 'result-test-table'
         }
       };
 
@@ -97,7 +101,8 @@ describe('ConfigManager', () => {
         projectName: 'sample-project-dev',
         param: {
           'td.database': 'dev-db',
-          'td.table': 'dev-table'
+          'td.table': 'dev-table',
+          'td.result_table': 'result-dev-table'
         }
       };
 

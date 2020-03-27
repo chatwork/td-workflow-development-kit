@@ -53,6 +53,24 @@ describe('ConfigManager', () => {
       execSync('unset TD_WDK_ENV');
     });
 
+    it('Success - env name override', () => {
+      process.env['TD_WDK_ENV'] = 'dev';
+
+      const result: Config = {
+        // config.yaml の env.test のパラメーター
+        projectName: 'sample-project-test',
+        param: {
+          'td.database': 'expect-db',
+          'td.table': 'expect-table'
+        }
+      };
+
+      const configManager = new ConfigManager('./test/lib/configManager/config.yaml');
+      expect(configManager.getWorkflowParam('test')).toEqual(result);
+
+      execSync('unset TD_WDK_ENV');
+    });
+
     it('Error - missing environment variable', () => {
       process.env['TD_WDK_ENV'] = 'hoge';
 

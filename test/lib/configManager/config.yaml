@@ -11,3 +11,9 @@ env:
       td:
         database: test-db
         table: test-table
+  test:
+    projectName: sample-project-test
+    param:
+      td:
+        database: expect-db
+        table: expect-table

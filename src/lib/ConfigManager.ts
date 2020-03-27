@@ -40,19 +40,20 @@ export class ConfigManager {
     }
   }
 
-  public getWorkflowParam = (): OutputConfig => {
+  public getWorkflowParam = (envOverride?: string): OutputConfig => {
+    const env = envOverride ? envOverride : this.env;
     const file = new File(this.filePath);
     const rawConfig = yaml.parse(file.read()) as RawConfig;
 
-    if (!rawConfig.env[this.env]) {
+    if (!rawConfig.env[env]) {
       throw new Error(
         `Variable for specified environment does not exist. - '${process.env['TD_WDK_ENV']}'`
       );
     }
 
     return {
-      projectName: rawConfig.env[this.env].projectName,
-      param: this.getConfigParameter(rawConfig.env[this.env].param)
+      projectName: rawConfig.env[env].projectName,
+      param: this.getConfigParameter(rawConfig.env[env].param)
     };
   };
 

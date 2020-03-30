@@ -4,9 +4,15 @@ import * as yaml from 'yaml';
 import { File } from './File';
 import { TestConfig } from './ConfigManager';
 
+//cSpell:word VARCHAR
+
 type Schema = {
   name: string;
-  type: 'int' | 'double' | 'string' | string;
+  type: 'INT' | 'DOUBLE' | 'VARCHAR';
+};
+
+type CSVRawData = {
+  [key: string]: string;
 };
 
 export class SQL {
@@ -24,17 +30,26 @@ export class SQL {
     });
 
     const dataFile = new File(path.join(this.resourceRootPath, config.dataFilePath));
-    const csvData = csv(dataFile.read(), { columns: true });
+    const csvData = csv(dataFile.read(), { columns: true }) as CSVRawData[];
 
-    console.log(csvData);
+    const insertData = csvData.map(data => {
+      const dataElements = schemas.map(schema => {
+        if (schema.type === 'VARCHAR') {
+          return `"${data[schema.name]}"`;
+        }
+
+        return `${data[schema.name]}`;
+      });
+
+      return `( ${dataElements.join(', ')} )`;
+    });
 
     const sql = `CREATE TABLE IF NOT EXISTS ${config.name} (
       ${schemaForCreateTable.join(', ')}
     );
 
     INSERT INTO ${config.name} (${schemaForInsertInto.join(', ')}) VALUES
-      (1, 'hoge'),
-    (2, 'fuga')
+      ${insertData.join(', ')}
     ;`;
 
     console.log(sql);

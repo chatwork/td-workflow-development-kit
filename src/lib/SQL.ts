@@ -6,9 +6,11 @@ import { TestConfig } from './ConfigManager';
 
 //cSpell:word VARCHAR
 
+const allowType = ['INT', 'DOUBLE', 'VARCHAR'] as const;
+
 type Schema = {
   name: string;
-  type: 'INT' | 'DOUBLE' | 'VARCHAR';
+  type: typeof allowType[number]; // 配列 'allowType' を Union 型の型定義として使える
 };
 
 type CSVRawData = {
@@ -16,30 +18,58 @@ type CSVRawData = {
 };
 
 export class SQL {
-  constructor(private resourceRootPath: string) {}
+  constructor(private resourceRootPath: string, private targetPackagePath: string) {}
 
   public generateCreateTableSQLFile = (config: TestConfig['tables'][0]): void => {
     const schemaFile = new File(path.join(this.resourceRootPath, config.schemaFilePath));
     const schemas = yaml.parse(schemaFile.read()) as Schema[];
 
+    const dataFile = new File(path.join(this.resourceRootPath, config.dataFilePath));
+
+    const createTableSQL = this.getCreateTableSQL(config.name, schemas);
+    const insertIntoSQL = this.getInsertIntoSQL(config.name, schemas, dataFile.read());
+
+    const sqlText = `${createTableSQL}\n\n${insertIntoSQL}`;
+
+    const sqlFile = new File(path.join(this.targetPackagePath, `/sql/${config.name}.sql`));
+    sqlFile.write(sqlText);
+  };
+
+  private getCreateTableSQL = (tableName: string, schemas: Schema[]): string => {
     const schemaForCreateTable = schemas.map(schema => {
-      return `"${schema.name}" ${schema.type}`;
+      if (!allowType.includes(schema.type.toUpperCase() as Schema['type'])) {
+        throw new Error(
+          `[Config.test.tables] Schema has mismatched column type. Allow type in ${allowType.join(
+            ', '
+          )}. => '${tableName}.${schema.name}': '${schema.type}'`
+        );
+      }
+
+      return `"${schema.name}" ${schema.type.toUpperCase()}`;
     });
+
+    return `CREATE TABLE IF NOT EXISTS "${tableName}" (\n  ${schemaForCreateTable.join(
+      ',\n  '
+    )}\n);`;
+  };
+
+  private getInsertIntoSQL = (tableName: string, schemas: Schema[], csvText: string): string => {
     const schemaForInsertInto = schemas.map(schema => {
       return `${schema.name}`;
     });
 
-    const dataFile = new File(path.join(this.resourceRootPath, config.dataFilePath));
-    const csvData = csv(dataFile.read(), { columns: true }) as CSVRawData[];
+    const csvData = csv(csvText, { columns: true }) as CSVRawData[];
 
     const insertData = csvData.map(data => {
       const dataElements = schemas.map(schema => {
         if (!data[schema.name]) {
-          throw new Error(`Schema has mismatched column name. => '${config.name}.${schema.name}'`);
+          throw new Error(
+            `[Config.test.tables] Schema has mismatched column name. => '${tableName}.${schema.name}'`
+          );
         }
 
         if (schema.type === 'VARCHAR') {
-          return `"${data[schema.name]}"`;
+          return `'${data[schema.name]}'`;
         }
 
         return `${data[schema.name]}`;
@@ -48,14 +78,8 @@ export class SQL {
       return `( ${dataElements.join(', ')} )`;
     });
 
-    const sql = `CREATE TABLE IF NOT EXISTS "${config.name}" (
-      ${schemaForCreateTable.join(', ')}
-    );
-
-    INSERT INTO "${config.name}" (${schemaForInsertInto.join(', ')}) VALUES
-      ${insertData.join(', ')}
-    ;`;
-
-    console.log(sql);
+    return `INSERT INTO "${tableName}" (${schemaForInsertInto.join(
+      ', '
+    )}) VALUES\n  ${insertData.join(',\n  ')}\n;`;
   };
 }

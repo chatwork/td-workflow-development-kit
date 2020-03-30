@@ -24,15 +24,15 @@ export class WorkspaceManager {
         targetPath: '/.gitignore'
       },
       {
-        filePath: '/assets/testData/schemaTemplate.yaml',
+        filePath: '/assets/testTemplate/schemaTemplate.yaml',
         targetPath: '/test/schema/schema.yaml'
       },
       {
-        filePath: '/assets/testData/testDataTemplate.csv',
+        filePath: '/assets/testTemplate/testDataTemplate.csv',
         targetPath: '/test/csv/test-table.csv'
       },
       {
-        filePath: '/assets/testData/expectDataTemplate.csv',
+        filePath: '/assets/testTemplate/expectDataTemplate.csv',
         targetPath: '/test/csv/expect-table.csv'
       }
     ]

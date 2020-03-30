@@ -22,15 +22,15 @@ describe('Workspace', () => {
           targetPath: '/.gitignore'
         },
         {
-          filePath: './test/assets/testData/schemaTemplate.yaml',
+          filePath: './test/assets/testTemplate/schemaTemplate.yaml',
           targetPath: '/test/schema/schema.yaml'
         },
         {
-          filePath: './test/assets/testData/testDataTemplate.csv',
+          filePath: './test/assets/testTemplate/testDataTemplate.csv',
           targetPath: '/test/csv/test-table.csv'
         },
         {
-          filePath: './test/assets/testData/expectDataTemplate.csv',
+          filePath: './test/assets/testTemplate/expectDataTemplate.csv',
           targetPath: '/test/csv/expect-table.csv'
         }
       ];

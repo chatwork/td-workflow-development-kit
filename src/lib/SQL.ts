@@ -34,6 +34,10 @@ export class SQL {
 
     const insertData = csvData.map(data => {
       const dataElements = schemas.map(schema => {
+        if (!data[schema.name]) {
+          throw new Error(`Schema has mismatched column name. => '${config.name}.${schema.name}'`);
+        }
+
         if (schema.type === 'VARCHAR') {
           return `"${data[schema.name]}"`;
         }
@@ -44,11 +48,11 @@ export class SQL {
       return `( ${dataElements.join(', ')} )`;
     });
 
-    const sql = `CREATE TABLE IF NOT EXISTS ${config.name} (
+    const sql = `CREATE TABLE IF NOT EXISTS "${config.name}" (
       ${schemaForCreateTable.join(', ')}
     );
 
-    INSERT INTO ${config.name} (${schemaForInsertInto.join(', ')}) VALUES
+    INSERT INTO "${config.name}" (${schemaForInsertInto.join(', ')}) VALUES
       ${insertData.join(', ')}
     ;`;
 

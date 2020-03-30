@@ -9,9 +9,9 @@ describe('ConfigManager', () => {
       const result: Config = {
         projectName: 'sample-project-dev',
         param: {
-          'td.database': 'dev-db',
-          'td.table': 'dev-table',
-          'td.result_table': 'result-dev-table'
+          'td.database': 'dev_db',
+          'td.table': 'dev_table',
+          'td.result_table': 'result_dev_table'
         }
       };
 
@@ -28,9 +28,9 @@ describe('ConfigManager', () => {
         projectName: 'sample-project-dev',
         // dev
         param: {
-          'td.database': 'dev-db',
-          'td.table': 'dev-table',
-          'td.result_table': 'result-dev-table'
+          'td.database': 'dev_db',
+          'td.table': 'dev_table',
+          'td.result_table': 'result_dev_table'
         }
       };
 
@@ -44,9 +44,9 @@ describe('ConfigManager', () => {
       const result: Config = {
         projectName: 'sample-project',
         param: {
-          'td.database': 'sample-db',
-          'td.table': 'sample-table',
-          'td.result_table': 'result-sample-table'
+          'td.database': 'sample_db',
+          'td.table': 'sample_table',
+          'td.result_table': 'result_sample_table'
         }
       };
 
@@ -63,9 +63,9 @@ describe('ConfigManager', () => {
         // config.yaml の env.test のパラメーター
         projectName: 'sample-project-test',
         param: {
-          'td.database': 'test-db',
-          'td.table': 'test-table',
-          'td.result_table': 'result-test-table'
+          'td.database': 'test_db',
+          'td.table': 'test_table',
+          'td.result_table': 'result_test_table'
         }
       };
 
@@ -96,7 +96,7 @@ describe('ConfigManager', () => {
     it('Success', () => {
       const configManager = new ConfigManager('./test/lib/configManager/config.yaml');
       const result: TestConfig = {
-        database: 'test-db',
+        database: 'test_db',
         envParam: 'test',
         workflows: [
           {
@@ -105,20 +105,20 @@ describe('ConfigManager', () => {
         ],
         tables: [
           {
-            name: 'test-table',
-            dataFilePath: 'csv/test-table.csv',
-            schemaFilePath: 'schema/schema.yaml'
+            name: 'test_table',
+            dataFilePath: 'csv/test_table.csv',
+            schemaFilePath: 'schema/test_schema.yaml'
           },
           {
-            name: 'expect-table',
-            dataFilePath: 'csv/expect-table.csv',
-            schemaFilePath: 'schema/schema.yaml'
+            name: 'expect_table',
+            dataFilePath: 'csv/expect_table.csv',
+            schemaFilePath: 'schema/expect_schema.yaml'
           }
         ],
         expects: [
           {
-            srcTable: 'result-test-table',
-            expectTable: 'expect-table',
+            srcTable: 'result_test_table',
+            expectTable: 'expect_table',
             columns: ['name', 'total']
           }
         ]
@@ -136,9 +136,9 @@ describe('ConfigManager', () => {
       const result: Config = {
         projectName: 'sample-project-dev',
         param: {
-          'td.database': 'dev-db',
-          'td.table': 'dev-table',
-          'td.result_table': 'result-dev-table'
+          'td.database': 'dev_db',
+          'td.table': 'dev_table',
+          'td.result_table': 'result_dev_table'
         }
       };
 

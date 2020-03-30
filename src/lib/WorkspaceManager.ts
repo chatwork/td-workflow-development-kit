@@ -24,16 +24,20 @@ export class WorkspaceManager {
         targetPath: '/.gitignore'
       },
       {
-        filePath: '/assets/testTemplate/schemaTemplate.yaml',
-        targetPath: '/test/schema/schema.yaml'
+        filePath: '/assets/testTemplate/testSchemaTemplate.yaml',
+        targetPath: '/test/schema/test_schema.yaml'
+      },
+      {
+        filePath: '/assets/testTemplate/expectSchemaTemplate.yaml',
+        targetPath: '/test/schema/expect_schema.yaml'
       },
       {
         filePath: '/assets/testTemplate/testDataTemplate.csv',
-        targetPath: '/test/csv/test-table.csv'
+        targetPath: '/test/csv/test_table.csv'
       },
       {
         filePath: '/assets/testTemplate/expectDataTemplate.csv',
-        targetPath: '/test/csv/expect-table.csv'
+        targetPath: '/test/csv/expect_table.csv'
       }
     ]
   ): void => {

@@ -1,8 +1,8 @@
 _export:
   td:
-    database: 'dev-db'
-    table: 'dev-table'
-    result_table: 'result-dev-table'
+    database: 'dev_db'
+    table: 'dev_table'
+    result_table: 'result_dev_table'
 
 +task:
   td>: 'SELECT name, SUM(score) FROM ${td.table} GROUP BY 1'

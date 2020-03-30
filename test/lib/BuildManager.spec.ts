@@ -26,16 +26,20 @@ describe('BuildManager', () => {
         targetPath: '/.gitignore'
       },
       {
-        filePath: './test/assets/testTemplate/schemaTemplate.yaml',
-        targetPath: '/test/schema/schema.yaml'
+        filePath: './test/assets/testTemplate/testSchemaTemplate.yaml',
+        targetPath: '/test/schema/test_schema.yaml'
+      },
+      {
+        filePath: './test/assets/testTemplate/expectSchemaTemplate.yaml',
+        targetPath: '/test/schema/expect_schema.yaml'
       },
       {
         filePath: './test/assets/testTemplate/testDataTemplate.csv',
-        targetPath: '/test/csv/test-table.csv'
+        targetPath: '/test/csv/test_table.csv'
       },
       {
         filePath: './test/assets/testTemplate/expectDataTemplate.csv',
-        targetPath: '/test/csv/expect-table.csv'
+        targetPath: '/test/csv/expect_table.csv'
       }
     ];
 

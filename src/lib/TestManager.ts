@@ -42,6 +42,11 @@ export class TestManager {
 
   private generateCreateTableSQLFiles = (): void => {
     this.config.tables.forEach(table => {
+      if (!table.name.match(/^([a-z0-9_]+)$/)) {
+        // TD の table 命名規則にマッチするか確認
+        throw new Error(`Table name must follow this pattern ^([a-z0-9_]+)$. => '${table.name}'`);
+      }
+
       const sql = new SQL(path.join(this.directoryPath, this.resourceRootPath));
       sql.generateCreateTableSQLFile(table);
     });

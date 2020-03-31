@@ -1,6 +1,6 @@
 import { execSync } from 'child_process';
 import { BuildManager } from '../../src/lib/BuildManager';
-import { WorkspaceManager, CreateFilePaths } from '../../src/lib/WorkspaceManager';
+import { WorkspaceManager, WorkspaceAssetFilePaths } from '../../src/lib/WorkspaceManager';
 import { ConfigManager } from '../../src/lib/ConfigManager';
 import { WorkflowManager } from '../../src/lib/WorkflowManager';
 import { File } from '../../src/lib/File';
@@ -20,7 +20,7 @@ describe('BuildManager', () => {
 
     const configFilePath = './test/assets/configTemplate.yaml';
     const workflowFilePath = './test/assets/workflowTemplate.dig';
-    const filePaths: CreateFilePaths = [
+    const filePaths: WorkspaceAssetFilePaths = [
       {
         filePath: './test/assets/gitignoreTemplate',
         targetPath: '/.gitignore'

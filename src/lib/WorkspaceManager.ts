@@ -5,7 +5,7 @@ import { WorkflowManager } from './WorkflowManager';
 
 // cSpell:ignore gitignore
 
-export type CreateFilePaths = {
+export type WorkspaceAssetFilePaths = {
   filePath: string;
   targetPath: string;
 }[];
@@ -18,7 +18,7 @@ export class WorkspaceManager {
     workflowManager = new WorkflowManager(this.directoryPath + '/src/sample.dig'),
     configFilePath = '/assets/configTemplate.yaml',
     workflowFilePath = '/assets/workflowTemplate.dig',
-    filePaths: CreateFilePaths = [
+    filePaths: WorkspaceAssetFilePaths = [
       {
         filePath: '/assets/gitignoreTemplate',
         targetPath: '/.gitignore'

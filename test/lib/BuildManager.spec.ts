@@ -1,6 +1,6 @@
 import { execSync } from 'child_process';
 import { BuildManager } from '../../src/lib/BuildManager';
-import { WorkspaceManager } from '../../src/lib/WorkspaceManager';
+import { WorkspaceManager, WorkspaceAssetFilePaths } from '../../src/lib/WorkspaceManager';
 import { ConfigManager } from '../../src/lib/ConfigManager';
 import { WorkflowManager } from '../../src/lib/WorkflowManager';
 import { File } from '../../src/lib/File';
@@ -18,9 +18,30 @@ describe('BuildManager', () => {
     const configManager = new ConfigManager(directoryPath + '/config.yaml');
     const workflowManager = new WorkflowManager(directoryPath + '/src/sample.dig');
 
-    const configTemplateFilePath = './test/assets/configTemplate.yaml';
-    const workflowTemplateFilePath = './test/assets/workflowTemplate.dig';
-    const gitignoreTemplateFilePath = './test/assets/gitignoreTemplate';
+    const configFilePath = './test/assets/configTemplate.yaml';
+    const workflowFilePath = './test/assets/workflowTemplate.dig';
+    const filePaths: WorkspaceAssetFilePaths = [
+      {
+        filePath: './test/assets/gitignoreTemplate',
+        targetPath: '/.gitignore'
+      },
+      {
+        filePath: './test/assets/testTemplate/testSchemaTemplate.yaml',
+        targetPath: '/test/schema/test_schema.yaml'
+      },
+      {
+        filePath: './test/assets/testTemplate/expectSchemaTemplate.yaml',
+        targetPath: '/test/schema/expect_schema.yaml'
+      },
+      {
+        filePath: './test/assets/testTemplate/testDataTemplate.csv',
+        targetPath: '/test/csv/test_table.csv'
+      },
+      {
+        filePath: './test/assets/testTemplate/expectDataTemplate.csv',
+        targetPath: '/test/csv/expect_table.csv'
+      }
+    ];
 
     const log = new Log();
     log.printText = jest.fn().mockImplementation();
@@ -29,9 +50,9 @@ describe('BuildManager', () => {
     workspaceManager.create(
       configManager,
       workflowManager,
-      configTemplateFilePath,
-      workflowTemplateFilePath,
-      gitignoreTemplateFilePath
+      configFilePath,
+      workflowFilePath,
+      filePaths
     );
 
     it('Success - dev', () => {

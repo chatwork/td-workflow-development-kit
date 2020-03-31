@@ -14,7 +14,7 @@ export class BuildManager {
     configFilePath = './td-wdk/config.yaml'
   ) {
     const configManager = new ConfigManager(configFilePath);
-    this.config = configManager.get();
+    this.config = configManager.getWorkflowParam();
   }
 
   public build = (): void => {

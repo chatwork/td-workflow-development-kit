@@ -1,7 +1,10 @@
 _export:
   td:
-    database: 'sample-db'
-    table: 'sample-table'
+    database: 'sample_db'
+    table: 'sample_table'
+    result_table: 'result_sample_table'
 
 +task:
-  td>: 'SELECT * FROM ${td.table}'
+  td>: 'SELECT name, SUM(score) FROM ${td.table} GROUP BY 1'
+  insert_into: ${td.result_table}
+  database: ${td.database}

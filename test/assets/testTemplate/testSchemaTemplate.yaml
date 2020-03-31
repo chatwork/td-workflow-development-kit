@@ -1,0 +1,6 @@
+- name: id
+  type: INT
+- name: name
+  type: VARCHAR
+- name: score
+  type: INT

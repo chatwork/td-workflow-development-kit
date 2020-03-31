@@ -9,7 +9,7 @@ export class DeployManager {
   private apiKey: TreasureDataSecret;
   constructor(private directoryPath = './td-wdk', configFilePath = './td-wdk/config.yaml') {
     const configManager = new ConfigManager(configFilePath);
-    this.config = configManager.get();
+    this.config = configManager.getWorkflowParam();
 
     const apiKeyManager = new APIKeyManager();
     this.apiKey = {

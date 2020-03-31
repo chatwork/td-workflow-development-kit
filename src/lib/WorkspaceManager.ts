@@ -5,6 +5,11 @@ import { WorkflowManager } from './WorkflowManager';
 
 // cSpell:ignore gitignore
 
+export type WorkspaceAssetFilePaths = {
+  filePath: string;
+  targetPath: string;
+}[];
+
 export class WorkspaceManager {
   constructor(private directoryPath = `./td-wdk`) {}
 
@@ -13,7 +18,28 @@ export class WorkspaceManager {
     workflowManager = new WorkflowManager(this.directoryPath + '/src/sample.dig'),
     configFilePath = '/assets/configTemplate.yaml',
     workflowFilePath = '/assets/workflowTemplate.dig',
-    gitignoreFilePath = '/assets/gitignoreTemplate'
+    filePaths: WorkspaceAssetFilePaths = [
+      {
+        filePath: '/assets/gitignoreTemplate',
+        targetPath: '/.gitignore'
+      },
+      {
+        filePath: '/assets/testTemplate/testSchemaTemplate.yaml',
+        targetPath: '/test/schema/test_schema.yaml'
+      },
+      {
+        filePath: '/assets/testTemplate/expectSchemaTemplate.yaml',
+        targetPath: '/test/schema/expect_schema.yaml'
+      },
+      {
+        filePath: '/assets/testTemplate/testDataTemplate.csv',
+        targetPath: '/test/csv/test_table.csv'
+      },
+      {
+        filePath: '/assets/testTemplate/expectDataTemplate.csv',
+        targetPath: '/test/csv/expect_table.csv'
+      }
+    ]
   ): void => {
     // make ConfigFile
     configManager.init(configFilePath);
@@ -21,16 +47,16 @@ export class WorkspaceManager {
     // make SampleWorkflowFile
     workflowManager.init(workflowFilePath);
 
-    // make .gitignore
-    this.initIgnoreFile(gitignoreFilePath);
+    // make .gitignore, schema.yaml, test-table.csv ete...
+    filePaths.forEach(filePath => {
+      this.initFile(filePath.filePath, filePath.targetPath);
+    });
   };
 
-  private initIgnoreFile = (templateFilePath = '/assets/gitignoreTemplate'): void => {
-    const gitIgnoreTemplateFile = new File(
-      path.join(path.resolve(__dirname, '../../'), templateFilePath)
-    );
+  private initFile = (templateFilePath: string, targetPath: string): void => {
+    const templateFile = new File(path.join(path.resolve(__dirname, '../../'), templateFilePath));
 
-    const gitIgnoreFile = new File(this.directoryPath + '/.gitignore');
-    gitIgnoreFile.write(gitIgnoreTemplateFile.read());
+    const targetFile = new File(this.directoryPath + targetPath);
+    targetFile.write(templateFile.read());
   };
 }

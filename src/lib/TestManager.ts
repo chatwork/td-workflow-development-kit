@@ -35,6 +35,10 @@ export class TestManager {
     this.log.printText(``);
     this.generateCreateTableSQLFiles();
     this.log.printText(``);
+
+    // テスト用の SQL ファイルを作成
+    this.generateExpectSQLFiles();
+    this.log.printText(``);
   };
 
   private deletePackageDirectory = (): void => {
@@ -60,6 +64,22 @@ export class TestManager {
 
       this.log.printBuildText(
         path.join(this.targetPackagePath, `/sql/${table.name}.sql`),
+        `Builded`
+      );
+    });
+  };
+
+  private generateExpectSQLFiles = (): void => {
+    this.config.expects.forEach(expect => {
+      const sql = new SQL(
+        path.join(this.directoryPath, this.resourceRootPath),
+        path.join(this.directoryPath, this.targetPackagePath)
+      );
+
+      sql.generateExpectSQLFile(expect);
+
+      this.log.printBuildText(
+        path.join(this.targetPackagePath, `/sql/expect/${expect.srcTable}.sql`),
         `Builded`
       );
     });

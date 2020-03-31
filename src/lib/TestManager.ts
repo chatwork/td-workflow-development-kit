@@ -14,12 +14,13 @@ export class TestManager {
   constructor(
     private log: Log,
     private directoryPath = './td-wdk',
-    configFilePath = './td-wdk/config.yaml'
+    configFilePath = './td-wdk/config.yaml',
+    apiKeyFilePath?: string
   ) {
     const configManager = new ConfigManager(configFilePath);
     this.config = configManager.getTestParam();
 
-    const apiKeyManager = new APIKeyManager();
+    const apiKeyManager = new APIKeyManager(apiKeyFilePath);
     this.apiKey = {
       API_TOKEN: apiKeyManager.get()
     };

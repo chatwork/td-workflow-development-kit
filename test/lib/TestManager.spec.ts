@@ -55,7 +55,12 @@ describe('TestManager', () => {
   describe('generateCreateTableSQLFiles()', () => {
     it('Success', () => {
       const tableNames = ['test_table', 'expect_table'];
-      const testManager = new TestManager(log, directoryPath, directoryPath + '/config.yaml');
+      const testManager = new TestManager(
+        log,
+        directoryPath,
+        directoryPath + '/config.yaml',
+        './test/lib/testManager/.td-wdk'
+      );
       testManager['generateCreateTableSQLFiles']();
 
       tableNames.forEach(tableName => {

@@ -11,7 +11,11 @@ export class APIKeyManager {
 
   public get = (): string => {
     const file = new File(this.filePath);
-    return file.read();
+    try {
+      return file.read();
+    } catch (error) {
+      throw new Error('API Key not set.');
+    }
   };
 
   public set = (apiKey: string): void => {

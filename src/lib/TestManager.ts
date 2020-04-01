@@ -72,6 +72,7 @@ export class TestManager {
     this.log.succeed('Workflow deployed successfully.');
 
     this.log.start('Testing workflow...');
+    // WF の実行と監視
   };
 
   private deletePackageDirectory = (): void => {

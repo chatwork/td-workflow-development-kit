@@ -37,7 +37,7 @@ export class DeployManager {
     this.distPath = distPath;
 
     this.config = this.configManager.getWorkflowParam(env);
-    this.deploy();
+    await this.deploy();
 
     this.distPath = tempDistPath;
     this.config = this.configManager.getWorkflowParam();

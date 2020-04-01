@@ -7,13 +7,14 @@ export class DeployManager {
   private distPath = '/dist';
   private config: Config;
   private apiKey: TreasureDataSecret;
+  private configManager: ConfigManager;
   constructor(
     private directoryPath = './td-wdk',
     configFilePath = './td-wdk/config.yaml',
     apiKeyFilePath?: string
   ) {
-    const configManager = new ConfigManager(configFilePath);
-    this.config = configManager.getWorkflowParam();
+    this.configManager = new ConfigManager(configFilePath);
+    this.config = this.configManager.getWorkflowParam();
 
     const apiKeyManager = new APIKeyManager(apiKeyFilePath);
     this.apiKey = {
@@ -29,5 +30,16 @@ export class DeployManager {
       path.join(this.directoryPath, this.config.projectName + '.zip'),
       this.config.projectName
     );
+  };
+
+  public deployForTest = async (distPath: string, env: string): Promise<void> => {
+    const tempDistPath = this.distPath;
+    this.distPath = distPath;
+
+    this.config = this.configManager.getWorkflowParam(env);
+    this.deploy();
+
+    this.distPath = tempDistPath;
+    this.config = this.configManager.getWorkflowParam();
   };
 }

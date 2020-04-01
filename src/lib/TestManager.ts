@@ -1,29 +1,45 @@
 import * as path from 'path';
-import { TreasureDataSecret } from 'td-workflow-client';
+import * as yaml from 'yaml';
 import { ConfigManager, TestConfig } from './ConfigManager';
-import { APIKeyManager } from './APIKeyManager';
+import { BuildManager } from './BuildManager';
+import { DeployManager } from './DeployManager';
 import { Directory } from './Directory';
 import { SQL } from './SQL';
+import { File } from './File';
 import { Log } from './Log';
+
+// cSpell:word camelcase
+
+type DefineParam = {
+  timezone: string;
+  _export: {
+    td: {
+      database: string;
+    };
+    tables: {
+      table: string;
+      query: string;
+    }[];
+    workflows: string[];
+    tests: {
+      test_table: string;
+      expect_table: string;
+      query: string;
+    }[];
+  };
+};
 
 export class TestManager {
   private resourceRootPath = '/test';
   private targetPackagePath = '/test/package';
   private config: TestConfig;
-  private apiKey: TreasureDataSecret;
   constructor(
     private log: Log,
     private directoryPath = './td-wdk',
-    configFilePath = './td-wdk/config.yaml',
-    apiKeyFilePath?: string
+    configFilePath = './td-wdk/config.yaml'
   ) {
     const configManager = new ConfigManager(configFilePath);
     this.config = configManager.getTestParam();
-
-    const apiKeyManager = new APIKeyManager(apiKeyFilePath);
-    this.apiKey = {
-      API_TOKEN: apiKeyManager.get()
-    };
   }
 
   public test = async (): Promise<void> => {
@@ -31,7 +47,7 @@ export class TestManager {
     this.deletePackageDirectory();
 
     // テーブル作成用の SQL ファイルを生成
-    this.log.printText('Build sql file.');
+    this.log.printText('Building sql....');
     this.log.printText(``);
     this.generateCreateTableSQLFiles();
     this.log.printText(``);
@@ -39,6 +55,23 @@ export class TestManager {
     // テスト用の SQL ファイルを作成
     this.generateExpectSQLFiles();
     this.log.printText(``);
+
+    this.log.succeed('SQL builded successfully.');
+
+    this.log.start('Building workflow...');
+    this.generateWorkflowFile();
+    this.generateDefineFile();
+
+    const buildManager = new BuildManager(this.log);
+    buildManager.buildForTest(path.join(this.targetPackagePath, '/workflow'), this.config.envParam);
+    this.log.succeed('Workflow builded successfully.');
+
+    this.log.start('Deploying workflow...');
+    const deployManager = new DeployManager(path.join(this.directoryPath, this.resourceRootPath));
+    await deployManager.deployForTest(path.basename(this.targetPackagePath), this.config.envParam);
+    this.log.succeed('Workflow deployed successfully.');
+
+    this.log.start('Testing workflow...');
   };
 
   private deletePackageDirectory = (): void => {
@@ -83,5 +116,57 @@ export class TestManager {
         `Builded`
       );
     });
+  };
+
+  private generateWorkflowFile = (): void => {
+    const sourceWorkflowFile = new File(
+      path.join(path.resolve(__dirname, '../../'), '/assets/testWorkflow.dig')
+    );
+    const targetWorkflowFile = new File(
+      path.join(this.directoryPath, this.targetPackagePath, `test.dig`)
+    );
+    targetWorkflowFile.write(sourceWorkflowFile.read());
+  };
+
+  private generateDefineFile = (): void => {
+    const tables = this.config.tables.map((table): DefineParam['_export']['tables'][0] => {
+      return {
+        table: table.name,
+        query: `sql/${table.name}.sql`
+      };
+    });
+
+    const workflows = this.config.workflows.map(
+      (workflow): DefineParam['_export']['workflows'][0] => {
+        return `workflow/${workflow.filePath}`;
+      }
+    );
+
+    const tests = this.config.expects.map((expect): DefineParam['_export']['tests'][0] => {
+      return {
+        // eslint-disable-next-line @typescript-eslint/camelcase
+        test_table: expect.srcTable,
+        // eslint-disable-next-line @typescript-eslint/camelcase
+        expect_table: expect.expectTable,
+        query: `sql/expect/${expect.srcTable}.sql`
+      };
+    });
+
+    const define: DefineParam = {
+      timezone: 'Asia/Tokyo',
+      _export: {
+        td: {
+          database: this.config.database
+        },
+        tables: tables,
+        workflows: workflows,
+        tests: tests
+      }
+    };
+
+    const targetWorkflowFile = new File(
+      path.join(this.directoryPath, this.targetPackagePath, `define.dig`)
+    );
+    targetWorkflowFile.write(yaml.stringify(define));
   };
 }

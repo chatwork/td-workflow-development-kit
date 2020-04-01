@@ -90,11 +90,12 @@ export class SQL {
   };
 
   public generateExpectSQLFile = (config: TestConfig['expects'][0]): void => {
-    const schema = config.columns;
+    const schemas = config.columns;
+    const schemaWithQuote = schemas.map(schema => `"${schema}"`);
 
-    const sqlText = `SELECT ${schema.join(', ')} FROM "${
+    const sqlText = `SELECT ${schemaWithQuote.join(', ')} FROM "${
       config.srcTable
-    }" EXCEPT SELECT ${schema.join(', ')} FROM "${config.expectTable}"`;
+    }" EXCEPT SELECT ${schemaWithQuote.join(', ')} FROM "${config.expectTable}"`;
 
     const sqlFile = new File(
       path.join(this.targetPackagePath, `/sql/expect/${config.srcTable}.sql`)

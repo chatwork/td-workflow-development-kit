@@ -36,4 +36,8 @@ export class Directory {
 
     return fileList;
   };
+
+  public delete = (): void => {
+    fs.removeSync(this.directoryPath);
+  };
 }

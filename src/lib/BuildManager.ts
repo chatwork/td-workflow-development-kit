@@ -18,6 +18,7 @@ export class BuildManager {
   }
 
   public build = (): void => {
+    this.deleteDistDirectory();
     const fileList = this.getSrcFileList();
 
     this.log.printText(``);
@@ -31,6 +32,11 @@ export class BuildManager {
     const directory = new Directory(path.join(this.directoryPath, this.srcPath));
 
     return directory.getFileList();
+  };
+
+  private deleteDistDirectory = (): void => {
+    const distDirectory = new Directory(path.join(this.directoryPath, this.distPath));
+    distDirectory.delete();
   };
 
   private buildFile = (filePath: string): void => {

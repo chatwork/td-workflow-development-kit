@@ -1,8 +1,10 @@
 import * as path from 'path';
 import * as yaml from 'yaml';
-import { ConfigManager, TestConfig } from './ConfigManager';
+import { TreasureData, TreasureDataSecret } from 'td-workflow-client';
+import { ConfigManager, Config, TestConfig } from './ConfigManager';
 import { BuildManager } from './BuildManager';
 import { DeployManager } from './DeployManager';
+import { APIKeyManager } from './APIKeyManager';
 import { Directory } from './Directory';
 import { SQL } from './SQL';
 import { File } from './File';
@@ -32,15 +34,28 @@ type DefineParam = {
 export class TestManager {
   private resourceRootPath = '/test';
   private targetPackagePath = '/test/package';
+  private apiKey: TreasureDataSecret;
   private config: TestConfig;
+  private workflowConfig: Config;
   constructor(
     private log: Log,
     private directoryPath = './td-wdk',
-    configFilePath = './td-wdk/config.yaml'
+    configFilePath = './td-wdk/config.yaml',
+    apiKeyFilePath?: string
   ) {
     const configManager = new ConfigManager(configFilePath);
     this.config = configManager.getTestParam();
+    this.workflowConfig = configManager.getWorkflowParam(this.config.envParam);
+
+    this.apiKey = {
+      API_TOKEN: this.getApiKey(apiKeyFilePath)
+    };
   }
+
+  private getApiKey = (apiKeyFilePath?: string): string => {
+    const apiKeyManager = new APIKeyManager(apiKeyFilePath);
+    return apiKeyManager.get();
+  };
 
   public test = async (): Promise<void> => {
     // 旧ファイルの削除
@@ -73,6 +88,8 @@ export class TestManager {
 
     this.log.start('Testing workflow...');
     // WF の実行と監視
+    const attemptId = await this.executeWorkflow();
+    await this.watchWorkflow(attemptId);
   };
 
   private deletePackageDirectory = (): void => {
@@ -169,5 +186,36 @@ export class TestManager {
       path.join(this.directoryPath, this.targetPackagePath, `define.dig`)
     );
     targetWorkflowFile.write(yaml.stringify(define));
+  };
+
+  private executeWorkflow = async (): Promise<string> => {
+    const treasureData = new TreasureData(this.apiKey);
+
+    const response = await treasureData.executeWorkflow(this.workflowConfig.projectName, 'test');
+    return response.id;
+  };
+
+  private watchWorkflow = async (id: string): Promise<void> => {
+    const sleep = (time: number): Promise<void> => {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          resolve();
+        }, time);
+      });
+    };
+
+    const treasureData = new TreasureData(this.apiKey);
+    while (true) {
+      const response = await treasureData.getExecutedWorkflowStatus(id);
+      if (response.done && !response.success) {
+        throw new Error();
+      }
+
+      if (response.done && response.success) {
+        return;
+      }
+
+      sleep(1000);
+    }
   };
 }

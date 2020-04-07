@@ -56,6 +56,7 @@ describe('TestManager', () => {
     it('Success', () => {
       const tableNames = ['test_table', 'expect_table'];
       const testManager = new TestManager(log, directoryPath, directoryPath + '/config.yaml');
+      testManager['getApiKey'] = jest.fn().mockReturnValue('hoge');
       testManager['generateCreateTableSQLFiles']();
 
       tableNames.forEach(tableName => {
@@ -71,6 +72,7 @@ describe('TestManager', () => {
     it('Success', () => {
       const tableNames = ['result_test_table'];
       const testManager = new TestManager(log, directoryPath, directoryPath + '/config.yaml');
+      testManager['getApiKey'] = jest.fn().mockReturnValue('hoge');
       testManager['generateExpectSQLFiles']();
 
       tableNames.forEach(tableName => {

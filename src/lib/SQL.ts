@@ -88,4 +88,18 @@ export class SQL {
       ', '
     )}) VALUES\n  ${insertValueTexts.join(',\n  ')}\n;`;
   };
+
+  public generateExpectSQLFile = (config: TestConfig['expects'][0]): void => {
+    const schemas = config.columns;
+    const schemaWithQuote = schemas.map(schema => `"${schema}"`);
+
+    const sqlText = `SELECT ${schemaWithQuote.join(', ')} FROM "${
+      config.srcTable
+    }" EXCEPT SELECT ${schemaWithQuote.join(', ')} FROM "${config.expectTable}"`;
+
+    const sqlFile = new File(
+      path.join(this.targetPackagePath, `/sql/expect/${config.srcTable}.sql`)
+    );
+    sqlFile.write(sqlText);
+  };
 }

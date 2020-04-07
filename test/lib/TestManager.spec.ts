@@ -71,4 +71,24 @@ describe('TestManager', () => {
       });
     });
   });
+
+  describe('generateExpectSQLFiles()', () => {
+    it('Success', () => {
+      const tableNames = ['result_test_table'];
+      const testManager = new TestManager(
+        log,
+        directoryPath,
+        directoryPath + '/config.yaml',
+        './test/lib/testManager/.td-wdk'
+      );
+      testManager['generateExpectSQLFiles']();
+
+      tableNames.forEach(tableName => {
+        const buildFile = new File(directoryPath + `/test/package/sql/expect/${tableName}.sql`);
+        const expectFile = new File(`./test/lib/testManager/${tableName}.sql`);
+
+        expect(buildFile.read()).toBe(expectFile.read());
+      });
+    });
+  });
 });

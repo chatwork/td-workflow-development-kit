@@ -1,6 +1,12 @@
 import * as path from 'path';
 import * as yaml from 'yaml';
-import { TreasureData, TreasureDataSecret } from 'td-workflow-client';
+import chalk from 'chalk';
+import {
+  TreasureData,
+  TreasureDataSecret,
+  TreasureDataGetExecutedWorkflowTasksOutput,
+  TreasureDataGetExecutedWorkflowTasksOutputElement
+} from 'td-workflow-client';
 import { ConfigManager, Config, TestConfig } from './ConfigManager';
 import { BuildManager } from './BuildManager';
 import { DeployManager } from './DeployManager';
@@ -30,6 +36,25 @@ type DefineParam = {
     }[];
   };
 };
+
+interface TasksOutputElement extends TreasureDataGetExecutedWorkflowTasksOutputElement {
+  storeParams: {
+    td: {
+      last_results?: {
+        [column: string]: unknown;
+      };
+      last_job_id: string;
+      last_job: {
+        id: string;
+        num_records: number;
+      };
+    };
+  };
+}
+
+interface TasksOutputElement extends TreasureDataGetExecutedWorkflowTasksOutput {
+  tasks: TasksOutputElement[];
+}
 
 export class TestManager {
   private resourceRootPath = '/test';
@@ -86,9 +111,9 @@ export class TestManager {
     await deployManager.deployForTest(path.basename(this.targetPackagePath), this.config.envParam);
     this.log.succeed('Workflow deployed successfully.');
 
-    this.log.start('Testing workflow...');
     // WF の実行と監視
     const attemptId = await this.executeWorkflow();
+    this.log.start('Testing workflow...');
     await this.watchWorkflow(attemptId);
   };
 
@@ -189,13 +214,23 @@ export class TestManager {
   };
 
   private executeWorkflow = async (): Promise<string> => {
+    this.log.start('Execute workflow...');
     const treasureData = new TreasureData(this.apiKey);
 
     const response = await treasureData.executeWorkflow(this.workflowConfig.projectName, 'test');
-    return response.id;
+    this.log.succeed('Workflow executed successfully.');
+
+    const attemptId = response.id;
+    this.log.printText(
+      `TD workflow log => ` +
+        chalk.blue(
+          `https://console.treasuredata.com/app/workflows/${response.workflow.id}/sessions/${response.sessionId}`
+        )
+    );
+    return attemptId;
   };
 
-  private watchWorkflow = async (id: string): Promise<void> => {
+  private watchWorkflow = async (attemptId: string): Promise<void> => {
     const sleep = (time: number): Promise<void> => {
       return new Promise(resolve => {
         setTimeout(() => {
@@ -206,9 +241,29 @@ export class TestManager {
 
     const treasureData = new TreasureData(this.apiKey);
     while (true) {
-      const response = await treasureData.getExecutedWorkflowStatus(id);
+      const response = await treasureData.getExecutedWorkflowStatus(attemptId);
+      const workflowDetail = (await treasureData.getExecutedWorkflowTasks(
+        attemptId
+      )) as TasksOutputElement;
+      const numTaskSucceed = workflowDetail.tasks.filter(task => task.state === 'success').length;
+
+      this.log.changeText(`Testing workflow... (${numTaskSucceed}/${workflowDetail.tasks.length})`);
+
       if (response.done && !response.success) {
-        throw new Error();
+        const errorTask = workflowDetail.tasks.filter(task => task.state === 'error');
+        if (!errorTask.length) throw new Error('Unknown Error');
+
+        let errorMessage =
+          chalk.bgRed(`[TestWorkflow Error]`) +
+          ` An error occurred in task '${errorTask[0].fullName}'.`;
+        if (errorTask[0].storeParams.td) {
+          errorMessage +=
+            ` Query job details => ` +
+            chalk.blue(
+              `https://console.treasuredata.com/app/jobs/${errorTask[0].storeParams.td.last_job_id}`
+            );
+        }
+        throw new Error(errorMessage);
       }
 
       if (response.done && response.success) {

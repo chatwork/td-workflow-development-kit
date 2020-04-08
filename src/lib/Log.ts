@@ -6,9 +6,14 @@ import ora from 'ora';
 
 export class Log {
   private spinner: ora.Ora;
-  constructor(private isForTest = false) {
+  private isForTest = false;
+  constructor() {
     this.spinner = ora();
   }
+
+  public setTestMode = (): void => {
+    this.isForTest = true;
+  };
 
   public start = (message: string, color: ora.Color = 'cyan'): void => {
     this.spinner.text = message;

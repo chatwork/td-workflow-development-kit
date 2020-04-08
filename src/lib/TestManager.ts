@@ -242,7 +242,7 @@ export class TestManager {
   };
 
   private watchWorkflow = async (attemptId: string): Promise<void> => {
-    const sleep = (time: number): Promise<void> => {
+    const sleep = async (time: number): Promise<void> => {
       return new Promise(resolve => {
         setTimeout(() => {
           resolve();
@@ -289,7 +289,7 @@ export class TestManager {
         return;
       }
 
-      sleep(1000);
+      await sleep(500);
     }
   };
 }

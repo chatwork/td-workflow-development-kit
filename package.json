@@ -58,7 +58,6 @@
     ]
   },
   "dependencies": {
-    "@types/commander": "2.12.2",
     "@types/fs-extra": "8.1.0",
     "@types/yaml": "1.2.0",
     "chalk": "3.0.0",

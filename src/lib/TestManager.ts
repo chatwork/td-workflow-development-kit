@@ -50,6 +50,9 @@ interface TasksOutputElement extends TreasureDataGetExecutedWorkflowTasksOutputE
       };
     };
   };
+  error: {
+    message: string;
+  };
 }
 
 interface TasksOutputElement extends TreasureDataGetExecutedWorkflowTasksOutput {
@@ -221,7 +224,7 @@ export class TestManager {
 
     const attemptId = response.id;
     this.log.printText(
-      `TD workflow log => ` +
+      `TD workflow log : ` +
         chalk.blue(
           `https://console.treasuredata.com/app/workflows/${response.workflow.id}/sessions/${response.sessionId}`
         )
@@ -254,10 +257,18 @@ export class TestManager {
 
         let errorMessage =
           chalk.bgRed(`[TestWorkflow Error]`) +
-          ` An error occurred in task '${errorTask[0].fullName}'.`;
+          ` An error occurred in task : '${errorTask[0].fullName}'`;
+
+        // エラーメッセージが存在する場合
+        if (errorTask[0].error.message) {
+          errorMessage +=
+            `, Workflow error message : '` + chalk.yellow(`${errorTask[0].error.message}`) + `'`;
+        }
+
+        // クエリログが含まれている場合
         if (errorTask[0].storeParams.td) {
           errorMessage +=
-            ` Query job details => ` +
+            `, Query job details : ` +
             chalk.blue(
               `https://console.treasuredata.com/app/jobs/${errorTask[0].storeParams.td.last_job_id}`
             );

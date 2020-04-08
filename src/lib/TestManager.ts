@@ -263,26 +263,7 @@ export class TestManager {
       if (response.done && !response.success) {
         const errorTask = workflowDetail.tasks.filter(task => task.state === 'error');
         if (!errorTask.length) throw new Error('Unknown Error');
-
-        let errorMessage =
-          chalk.bgRed(`[TestWorkflow Error]`) +
-          ` An error occurred in task : '${errorTask[0].fullName}'`;
-
-        // エラーメッセージが存在する場合
-        if (errorTask[0].error.message) {
-          errorMessage +=
-            `, Workflow error message : '` + chalk.yellow(`${errorTask[0].error.message}`) + `'`;
-        }
-
-        // クエリログが含まれている場合
-        if (errorTask[0].stateParams.job) {
-          errorMessage +=
-            `, Query job details : ` +
-            chalk.blue(
-              `https://console.treasuredata.com/app/jobs/${errorTask[0].stateParams.job.jobId}`
-            );
-        }
-        throw new Error(errorMessage);
+        throw new Error(this.getErrorMessage(errorTask));
       }
 
       if (response.done && response.success) {
@@ -291,5 +272,28 @@ export class TestManager {
 
       await sleep(500);
     }
+  };
+
+  private getErrorMessage = (errorTask: TasksOutputElement[]): string => {
+    let errorMessage =
+      chalk.bgRed(`[TestWorkflow Error]`) +
+      ` An error occurred in task : '${errorTask[0].fullName}'`;
+
+    // エラーメッセージが存在する場合
+    if (errorTask[0].error.message) {
+      errorMessage +=
+        `, Workflow error message : '` + chalk.yellow(`${errorTask[0].error.message}`) + `'`;
+    }
+
+    // クエリログが含まれている場合
+    if (errorTask[0].stateParams.job) {
+      errorMessage +=
+        `, Query job details : ` +
+        chalk.blue(
+          `https://console.treasuredata.com/app/jobs/${errorTask[0].stateParams.job.jobId}`
+        );
+    }
+
+    return errorMessage;
   };
 }

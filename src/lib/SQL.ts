@@ -1,5 +1,5 @@
 import * as path from 'path';
-import csv from 'csv-parse/lib/sync';
+import csv from 'csv-parse/lib/sync.js';
 import * as yaml from 'yaml';
 import { File } from './File';
 import { TestConfig } from './ConfigManager';

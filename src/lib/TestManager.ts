@@ -59,7 +59,7 @@ interface TasksOutputElement extends TreasureDataGetExecutedWorkflowTasksOutput 
 export class TestManager {
   private resourceRootPath = '/test';
   private targetPackagePath = '/test/package';
-  private apiKey: TreasureDataSecret;
+  private apiKeyManager: APIKeyManager;
   private config: TestConfig;
   private workflowConfig: Config;
   constructor(
@@ -72,14 +72,13 @@ export class TestManager {
     this.config = configManager.getTestParam();
     this.workflowConfig = configManager.getWorkflowParam(this.config.envParam);
 
-    this.apiKey = {
-      API_TOKEN: this.getApiKey(apiKeyFilePath)
-    };
+    this.apiKeyManager = new APIKeyManager(apiKeyFilePath);
   }
 
-  private getApiKey = (apiKeyFilePath?: string): string => {
-    const apiKeyManager = new APIKeyManager(apiKeyFilePath);
-    return apiKeyManager.get();
+  private getApiKey = (): TreasureDataSecret => {
+    return {
+      API_TOKEN: this.apiKeyManager.get()
+    };
   };
 
   public test = async (): Promise<void> => {
@@ -215,7 +214,7 @@ export class TestManager {
 
   private executeWorkflow = async (): Promise<string> => {
     this.log.start('Execute workflow...');
-    const treasureData = new TreasureData(this.apiKey);
+    const treasureData = new TreasureData(this.getApiKey());
 
     const response = await treasureData.executeWorkflow(this.workflowConfig.projectName, 'test');
     this.log.succeed('Workflow executed successfully.');
@@ -239,7 +238,7 @@ export class TestManager {
       });
     };
 
-    const treasureData = new TreasureData(this.apiKey);
+    const treasureData = new TreasureData(this.getApiKey());
     while (true) {
       const response = await treasureData.getExecutedWorkflowStatus(attemptId);
       const workflowDetail = (await treasureData.getExecutedWorkflowTasks(

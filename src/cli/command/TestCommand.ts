@@ -14,7 +14,7 @@ export class TestCommand implements CommandInterface {
   };
 
   private run = async (): Promise<void> => {
-    const log = new Log();
+    const log = new Log(true);
     log.start('Start workflow test...');
 
     try {

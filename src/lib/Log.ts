@@ -6,7 +6,7 @@ import ora from 'ora';
 
 export class Log {
   private spinner: ora.Ora;
-  constructor() {
+  constructor(private isForTest = false) {
     this.spinner = ora();
   }
 
@@ -35,6 +35,8 @@ export class Log {
     state: 'Builded' | 'Copied',
     color: ora.Color = 'cyan'
   ): void => {
+    if (this.isForTest) return;
+
     filePath = filePath.slice(1);
     const tag =
       state === 'Builded'

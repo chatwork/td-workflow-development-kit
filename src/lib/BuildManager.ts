@@ -36,7 +36,7 @@ export class BuildManager {
     const fileList = this.getSrcFileList(srcPath);
 
     fileList.forEach(filePath => {
-      this.buildFile(filePath, srcPath, distPath, config, false);
+      this.buildFile(filePath, srcPath, distPath, config);
     });
   };
 
@@ -55,8 +55,7 @@ export class BuildManager {
     filePath: string,
     srcPath: string,
     distPath: string,
-    config: Config,
-    printLog = true
+    config: Config
   ): void => {
     const srcFile = new File(path.join(this.directoryPath, srcPath, filePath));
     const distFile = new File(path.join(this.directoryPath, distPath, filePath));
@@ -65,10 +64,10 @@ export class BuildManager {
 
     if (path.extname(filePath) === '.dig') {
       distFile.write(this.getReplacedFileData(srcData, config));
-      if (printLog) this.log.printBuildText(filePath, `Builded`);
+      this.log.printBuildText(filePath, `Builded`);
     } else {
       distFile.write(srcData);
-      if (printLog) this.log.printBuildText(filePath, `Copied`);
+      this.log.printBuildText(filePath, `Copied`);
     }
   };
 

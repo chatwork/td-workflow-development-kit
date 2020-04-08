@@ -50,8 +50,17 @@ interface TasksOutputElement extends TreasureDataGetExecutedWorkflowTasksOutputE
       };
     };
   };
+  stateParams: {
+    job: {
+      jobId: string;
+      domainKey: string;
+      pollIteration: unknown;
+      errorPollIteration: unknown;
+    };
+  };
   error: {
     message: string;
+    stacktrace?: string;
   };
 }
 
@@ -266,11 +275,11 @@ export class TestManager {
         }
 
         // クエリログが含まれている場合
-        if (errorTask[0].storeParams.td) {
+        if (errorTask[0].stateParams.job) {
           errorMessage +=
             `, Query job details : ` +
             chalk.blue(
-              `https://console.treasuredata.com/app/jobs/${errorTask[0].storeParams.td.last_job_id}`
+              `https://console.treasuredata.com/app/jobs/${errorTask[0].stateParams.job.jobId}`
             );
         }
         throw new Error(errorMessage);

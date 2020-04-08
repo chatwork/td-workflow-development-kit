@@ -1,11 +1,9 @@
 import * as path from 'path';
 import { TreasureData, TreasureDataSecret } from 'td-workflow-client';
-import { ConfigManager, Config } from './ConfigManager';
+import { ConfigManager } from './ConfigManager';
 import { APIKeyManager } from './APIKeyManager';
 
 export class DeployManager {
-  private distPath = '/dist';
-  private config: Config;
   private apiKey: TreasureDataSecret;
   private configManager: ConfigManager;
   constructor(
@@ -14,7 +12,6 @@ export class DeployManager {
     apiKeyFilePath?: string
   ) {
     this.configManager = new ConfigManager(configFilePath);
-    this.config = this.configManager.getWorkflowParam();
 
     const apiKeyManager = new APIKeyManager(apiKeyFilePath);
     this.apiKey = {
@@ -22,24 +19,18 @@ export class DeployManager {
     };
   }
 
-  public deploy = async (): Promise<void> => {
+  public deploy = async (distPath = '/dist', env?: string): Promise<void> => {
+    const config = this.configManager.getWorkflowParam(env);
     const treasureData = new TreasureData(this.apiKey);
 
     await treasureData.deployWorkflow(
-      path.join(this.directoryPath, this.distPath),
-      path.join(this.directoryPath, this.config.projectName + '.zip'),
-      this.config.projectName
+      path.join(this.directoryPath, distPath),
+      path.join(this.directoryPath, config.projectName + '.zip'),
+      config.projectName
     );
   };
 
   public deployForTest = async (distPath: string, env: string): Promise<void> => {
-    const tempDistPath = this.distPath;
-    this.distPath = distPath;
-
-    this.config = this.configManager.getWorkflowParam(env);
-    await this.deploy();
-
-    this.distPath = tempDistPath;
-    this.config = this.configManager.getWorkflowParam();
+    await this.deploy(distPath, env);
   };
 }

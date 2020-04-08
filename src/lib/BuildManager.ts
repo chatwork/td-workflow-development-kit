@@ -5,9 +5,6 @@ import { File } from './File';
 import { Log } from './Log';
 
 export class BuildManager {
-  private srcPath = '/src';
-  private distPath = '/dist';
-  private config: Config;
   private configManager: ConfigManager;
   constructor(
     private log: Log,
@@ -15,55 +12,59 @@ export class BuildManager {
     configFilePath = './td-wdk/config.yaml'
   ) {
     this.configManager = new ConfigManager(configFilePath);
-    this.config = this.configManager.getWorkflowParam();
   }
 
   public build = (): void => {
-    this.deleteDistDirectory();
-    const fileList = this.getSrcFileList();
+    const srcPath = '/src';
+    const distPath = '/dist';
+    const config = this.configManager.getWorkflowParam();
+
+    this.deleteDistDirectory(distPath);
+    const fileList = this.getSrcFileList(srcPath);
 
     this.log.printText(``);
     fileList.forEach(filePath => {
-      this.buildFile(filePath);
+      this.buildFile(filePath, srcPath, distPath, config);
     });
     this.log.printText(``);
   };
 
   public buildForTest = (distPath: string, env: string): void => {
-    const tempDistPath = this.distPath;
-    this.distPath = distPath;
+    const srcPath = '/src';
+    const config = this.configManager.getWorkflowParam(env);
 
-    this.config = this.configManager.getWorkflowParam(env);
-
-    const fileList = this.getSrcFileList();
+    const fileList = this.getSrcFileList(srcPath);
 
     fileList.forEach(filePath => {
-      this.buildFile(filePath, false);
+      this.buildFile(filePath, srcPath, distPath, config, false);
     });
-
-    this.distPath = tempDistPath;
-    this.config = this.configManager.getWorkflowParam();
   };
 
-  private getSrcFileList = (): string[] => {
-    const directory = new Directory(path.join(this.directoryPath, this.srcPath));
+  private getSrcFileList = (srcPath: string): string[] => {
+    const directory = new Directory(path.join(this.directoryPath, srcPath));
 
     return directory.getFileList();
   };
 
-  private deleteDistDirectory = (): void => {
-    const distDirectory = new Directory(path.join(this.directoryPath, this.distPath));
+  private deleteDistDirectory = (distPath: string): void => {
+    const distDirectory = new Directory(path.join(this.directoryPath, distPath));
     distDirectory.delete();
   };
 
-  private buildFile = (filePath: string, printLog = true): void => {
-    const srcFile = new File(path.join(this.directoryPath, this.srcPath, filePath));
-    const distFile = new File(path.join(this.directoryPath, this.distPath, filePath));
+  private buildFile = (
+    filePath: string,
+    srcPath: string,
+    distPath: string,
+    config: Config,
+    printLog = true
+  ): void => {
+    const srcFile = new File(path.join(this.directoryPath, srcPath, filePath));
+    const distFile = new File(path.join(this.directoryPath, distPath, filePath));
 
     const srcData = srcFile.read();
 
     if (path.extname(filePath) === '.dig') {
-      distFile.write(this.getReplacedFileData(srcData));
+      distFile.write(this.getReplacedFileData(srcData, config));
       if (printLog) this.log.printBuildText(filePath, `Builded`);
     } else {
       distFile.write(srcData);
@@ -71,8 +72,8 @@ export class BuildManager {
     }
   };
 
-  private getReplacedFileData = (fileData: string): string => {
-    const configParam = this.config.param;
+  private getReplacedFileData = (fileData: string, config: Config): string => {
+    const configParam = config.param;
 
     Object.keys(configParam).forEach(key => {
       const regExp = new RegExp(`###${key}###`, 'g');

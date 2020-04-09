@@ -5,15 +5,10 @@ import ora from 'ora';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 export class Log {
-  private spinner: ora.Ora;
-  private isForTest = false;
+  protected spinner: ora.Ora;
   constructor() {
     this.spinner = ora();
   }
-
-  public setTestMode = (): void => {
-    this.isForTest = true;
-  };
 
   public start = (message: string, color: ora.Color = 'cyan'): void => {
     this.spinner.text = message;
@@ -40,8 +35,6 @@ export class Log {
     state: 'Builded' | 'Copied',
     color: ora.Color = 'cyan'
   ): void => {
-    if (this.isForTest) return;
-
     filePath = filePath.slice(1);
     const tag =
       state === 'Builded'
@@ -57,6 +50,15 @@ export class Log {
     this.spinner.color = color;
   };
 
+  public printBuildMargin = (): void => {
+    this.spinner.text = '';
+    this.spinner.color = 'cyan';
+    this.spinner.stopAndPersist({
+      symbol: '',
+      text: ''
+    });
+  };
+
   public stop = (): void => {
     this.spinner.stop();
   };
@@ -69,5 +71,28 @@ export class Log {
     this.spinner.fail(message);
     console.log();
     throw error;
+  };
+}
+
+export class LogForTest extends Log {
+  public printBuildText = (): void => {
+    return;
+  };
+
+  public printBuildMargin = (): void => {
+    return;
+  };
+
+  public printSQLBuildedText = (filePath: string, color: ora.Color = 'cyan'): void => {
+    filePath = filePath.slice(1);
+    const tag = chalk.green.inverse.bold(` Builded `);
+
+    this.spinner.stopAndPersist({
+      text: `${tag} ${path.join(
+        chalk.blackBright(path.dirname(filePath)),
+        chalk.bold(path.basename(filePath))
+      )}`
+    });
+    this.spinner.color = color;
   };
 }

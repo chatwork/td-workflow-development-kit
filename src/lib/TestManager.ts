@@ -6,7 +6,7 @@ import { DeployManager } from './DeployManager';
 import { Directory } from './Directory';
 import { SQL } from './SQL';
 import { File } from './File';
-import { Log } from './Log';
+import { LogForTest } from './Log';
 
 // cSpell:word camelcase
 
@@ -34,7 +34,7 @@ export class TestManager {
   private targetPackagePath = '/test/package';
   private config: TestConfig;
   constructor(
-    private log: Log,
+    private log: LogForTest,
     private directoryPath = './td-wdk',
     configFilePath = './td-wdk/config.yaml'
   ) {
@@ -63,12 +63,12 @@ export class TestManager {
     this.generateDefineFile();
 
     const buildManager = new BuildManager(this.log);
-    buildManager.buildForTest(path.join(this.targetPackagePath, '/workflow'), this.config.envParam);
+    buildManager.build(path.join(this.targetPackagePath, '/workflow'), this.config.envParam);
     this.log.succeed('Workflow builded successfully.');
 
     this.log.start('Deploying workflow...');
     const deployManager = new DeployManager(path.join(this.directoryPath, this.resourceRootPath));
-    await deployManager.deployForTest(path.basename(this.targetPackagePath), this.config.envParam);
+    await deployManager.deploy(path.basename(this.targetPackagePath), this.config.envParam);
     this.log.succeed('Workflow deployed successfully.');
 
     this.log.start('Testing workflow...');
@@ -96,10 +96,7 @@ export class TestManager {
 
       sql.generateCreateTableSQLFile(table);
 
-      this.log.printBuildText(
-        path.join(this.targetPackagePath, `/sql/${table.name}.sql`),
-        `Builded`
-      );
+      this.log.printSQLBuildedText(path.join(this.targetPackagePath, `/sql/${table.name}.sql`));
     });
   };
 
@@ -112,9 +109,8 @@ export class TestManager {
 
       sql.generateExpectSQLFile(expect);
 
-      this.log.printBuildText(
-        path.join(this.targetPackagePath, `/sql/expect/${expect.srcTable}.sql`),
-        `Builded`
+      this.log.printSQLBuildedText(
+        path.join(this.targetPackagePath, `/sql/expect/${expect.srcTable}.sql`)
       );
     });
   };

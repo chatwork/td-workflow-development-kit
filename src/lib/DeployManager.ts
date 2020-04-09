@@ -29,8 +29,4 @@ export class DeployManager {
       config.projectName
     );
   };
-
-  public deployForTest = async (distPath: string, env: string): Promise<void> => {
-    await this.deploy(distPath, env);
-  };
 }

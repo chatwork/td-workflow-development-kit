@@ -14,30 +14,17 @@ export class BuildManager {
     this.configManager = new ConfigManager(configFilePath);
   }
 
-  public build = (): void => {
-    const srcPath = '/src';
-    const distPath = '/dist';
-    const config = this.configManager.getWorkflowParam();
-
-    this.deleteDistDirectory(distPath);
-    const fileList = this.getSrcFileList(srcPath);
-
-    this.log.printText(``);
-    fileList.forEach(filePath => {
-      this.buildFile(filePath, srcPath, distPath, config);
-    });
-    this.log.printText(``);
-  };
-
-  public buildForTest = (distPath: string, env: string): void => {
+  public build = (distPath = '/dist', env?: string): void => {
     const srcPath = '/src';
     const config = this.configManager.getWorkflowParam(env);
 
     const fileList = this.getSrcFileList(srcPath);
 
+    this.log.printBuildMargin();
     fileList.forEach(filePath => {
-      this.buildFile(filePath, srcPath, distPath, config, false);
+      this.buildFile(filePath, srcPath, distPath, config);
     });
+    this.log.printBuildMargin();
   };
 
   private getSrcFileList = (srcPath: string): string[] => {
@@ -46,7 +33,7 @@ export class BuildManager {
     return directory.getFileList();
   };
 
-  private deleteDistDirectory = (distPath: string): void => {
+  public deleteDistDirectory = (distPath = '/dist'): void => {
     const distDirectory = new Directory(path.join(this.directoryPath, distPath));
     distDirectory.delete();
   };
@@ -55,8 +42,7 @@ export class BuildManager {
     filePath: string,
     srcPath: string,
     distPath: string,
-    config: Config,
-    printLog = true
+    config: Config
   ): void => {
     const srcFile = new File(path.join(this.directoryPath, srcPath, filePath));
     const distFile = new File(path.join(this.directoryPath, distPath, filePath));
@@ -65,10 +51,10 @@ export class BuildManager {
 
     if (path.extname(filePath) === '.dig') {
       distFile.write(this.getReplacedFileData(srcData, config));
-      if (printLog) this.log.printBuildText(filePath, `Builded`);
+      this.log.printBuildText(filePath, `Builded`);
     } else {
       distFile.write(srcData);
-      if (printLog) this.log.printBuildText(filePath, `Copied`);
+      this.log.printBuildText(filePath, `Copied`);
     }
   };
 

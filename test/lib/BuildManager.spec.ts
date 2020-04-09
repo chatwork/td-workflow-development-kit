@@ -45,6 +45,7 @@ describe('BuildManager', () => {
 
     const log = new Log();
     log.printText = jest.fn().mockImplementation();
+    log.printBuildMargin = jest.fn().mockImplementation();
     log.printBuildText = jest.fn().mockImplementation();
 
     workspaceManager.create(

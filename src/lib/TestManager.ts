@@ -1,8 +1,16 @@
 import * as path from 'path';
 import * as yaml from 'yaml';
-import { ConfigManager, TestConfig } from './ConfigManager';
+import chalk from 'chalk';
+import {
+  TreasureData,
+  TreasureDataSecret,
+  TreasureDataGetExecutedWorkflowTasksOutput,
+  TreasureDataGetExecutedWorkflowTasksOutputElement
+} from 'td-workflow-client';
+import { ConfigManager, Config, TestConfig } from './ConfigManager';
 import { BuildManager } from './BuildManager';
 import { DeployManager } from './DeployManager';
+import { APIKeyManager } from './APIKeyManager';
 import { Directory } from './Directory';
 import { SQL } from './SQL';
 import { File } from './File';
@@ -29,18 +37,61 @@ type DefineParam = {
   };
 };
 
+interface TasksOutputElement extends TreasureDataGetExecutedWorkflowTasksOutputElement {
+  storeParams: {
+    td: {
+      last_results?: {
+        [column: string]: unknown;
+      };
+      last_job_id: string;
+      last_job: {
+        id: string;
+        num_records: number;
+      };
+    };
+  };
+  stateParams: {
+    job: {
+      jobId: string;
+      domainKey: string;
+      pollIteration: unknown;
+      errorPollIteration: unknown;
+    };
+  };
+  error: {
+    message: string;
+    stacktrace?: string;
+  };
+}
+
+interface TasksOutputElement extends TreasureDataGetExecutedWorkflowTasksOutput {
+  tasks: TasksOutputElement[];
+}
+
 export class TestManager {
   private resourceRootPath = '/test';
   private targetPackagePath = '/test/package';
+  private apiKeyManager: APIKeyManager;
   private config: TestConfig;
+  private workflowConfig: Config;
   constructor(
     private log: LogForTest,
     private directoryPath = './td-wdk',
-    configFilePath = './td-wdk/config.yaml'
+    configFilePath = './td-wdk/config.yaml',
+    apiKeyFilePath?: string
   ) {
     const configManager = new ConfigManager(configFilePath);
     this.config = configManager.getTestParam();
+    this.workflowConfig = configManager.getWorkflowParam(this.config.envParam);
+
+    this.apiKeyManager = new APIKeyManager(apiKeyFilePath);
   }
+
+  private getApiKey = (): TreasureDataSecret => {
+    return {
+      API_TOKEN: this.apiKeyManager.get()
+    };
+  };
 
   public test = async (): Promise<void> => {
     // 旧ファイルの削除
@@ -71,8 +122,10 @@ export class TestManager {
     await deployManager.deploy(path.basename(this.targetPackagePath), this.config.envParam);
     this.log.succeed('Workflow deployed successfully.');
 
-    this.log.start('Testing workflow...');
     // WF の実行と監視
+    const attemptId = await this.executeWorkflow();
+    this.log.start('Testing workflow...');
+    await this.watchWorkflow(attemptId);
   };
 
   private deletePackageDirectory = (): void => {
@@ -165,5 +218,78 @@ export class TestManager {
       path.join(this.directoryPath, this.targetPackagePath, `define.dig`)
     );
     targetWorkflowFile.write(yaml.stringify(define));
+  };
+
+  private executeWorkflow = async (): Promise<string> => {
+    this.log.start('Execute workflow...');
+    const treasureData = new TreasureData(this.getApiKey());
+
+    const response = await treasureData.executeWorkflow(this.workflowConfig.projectName, 'test');
+    this.log.succeed('Workflow executed successfully.');
+
+    const attemptId = response.id;
+    this.log.printText(
+      `TD workflow log : ` +
+        chalk.blue(
+          `https://console.treasuredata.com/app/workflows/${response.workflow.id}/sessions/${response.sessionId}`
+        )
+    );
+    return attemptId;
+  };
+
+  private watchWorkflow = async (attemptId: string): Promise<void> => {
+    const sleep = async (time: number): Promise<void> => {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          resolve();
+        }, time);
+      });
+    };
+
+    const treasureData = new TreasureData(this.getApiKey());
+    while (true) {
+      const response = await treasureData.getExecutedWorkflowStatus(attemptId);
+      const workflowDetail = (await treasureData.getExecutedWorkflowTasks(
+        attemptId
+      )) as TasksOutputElement;
+      const numTaskSucceed = workflowDetail.tasks.filter(task => task.state === 'success').length;
+
+      this.log.changeText(`Testing workflow... (${numTaskSucceed}/${workflowDetail.tasks.length})`);
+
+      if (response.done && !response.success) {
+        const errorTask = workflowDetail.tasks.filter(task => task.state === 'error');
+        if (!errorTask.length) throw new Error('Unknown Error');
+        throw new Error(this.getErrorMessage(errorTask));
+      }
+
+      if (response.done && response.success) {
+        return;
+      }
+
+      await sleep(500);
+    }
+  };
+
+  private getErrorMessage = (errorTask: TasksOutputElement[]): string => {
+    let errorMessage =
+      chalk.bgRed(`[TestWorkflow Error]`) +
+      ` An error occurred in task : '${errorTask[0].fullName}'`;
+
+    // エラーメッセージが存在する場合
+    if (errorTask[0].error.message) {
+      errorMessage +=
+        `, Workflow error message : '` + chalk.yellow(`${errorTask[0].error.message}`) + `'`;
+    }
+
+    // クエリログが含まれている場合
+    if (errorTask[0].stateParams.job) {
+      errorMessage +=
+        `, Query job details : ` +
+        chalk.blue(
+          `https://console.treasuredata.com/app/jobs/${errorTask[0].stateParams.job.jobId}`
+        );
+    }
+
+    return errorMessage;
   };
 }

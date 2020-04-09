@@ -1,6 +1,6 @@
 {
   "name": "td-workflow-development-kit",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "TreasureData Workflow Development Kit",
   "private": true,
   "bin": {
@@ -58,7 +58,6 @@
     ]
   },
   "dependencies": {
-    "@types/commander": "2.12.2",
     "@types/fs-extra": "8.1.0",
     "@types/yaml": "1.2.0",
     "chalk": "3.0.0",

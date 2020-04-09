@@ -13,11 +13,15 @@ export class DeployManager {
   ) {
     this.configManager = new ConfigManager(configFilePath);
 
-    const apiKeyManager = new APIKeyManager(apiKeyFilePath);
     this.apiKey = {
-      API_TOKEN: apiKeyManager.get()
+      API_TOKEN: this.getApiKey(apiKeyFilePath)
     };
   }
+
+  private getApiKey = (apiKeyFilePath?: string): string => {
+    const apiKeyManager = new APIKeyManager(apiKeyFilePath);
+    return apiKeyManager.get();
+  };
 
   public deploy = async (distPath = '/dist', env?: string): Promise<void> => {
     const config = this.configManager.getWorkflowParam(env);

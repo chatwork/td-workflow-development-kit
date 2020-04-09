@@ -4,7 +4,12 @@ _export:
     table: 'sample_table'
     result_table: 'result_sample_table'
 
++prepare_load:
+  td_ddl>:
+  empty_tables: ["${td.result_table}"]
+
 +task:
-  td>: 'SELECT name, SUM(score) FROM ${td.table} GROUP BY 1'
+  td>:
+  query: 'SELECT name, SUM(score) AS "total" FROM ${td.table} GROUP BY 1'
   insert_into: ${td.result_table}
   database: ${td.database}

@@ -1,0 +1,63 @@
+timezone: "Asia/Tokyo"
+
+# 共通変数定義をロード
+!include : "define.dig"
+
+# データを置く DB を作成
++create_database:
+  td_ddl>:
+  create_databases: ["${td.database}"]
+  database: ${td.database}
+
+# テーブルの削除
++drop_tables:
+  for_each>:
+      sql: ${tables}
+  _parallel: true # 並列処理を許可
+  _do:
+    +drop:
+      td_ddl>:
+      drop_tables: ["${sql.table}"]
+
+# テーブルの展開
++create_tables:
+  for_each>:
+      sql: ${tables}
+  _parallel: true # 並列処理を許可
+  _do:
+    +import:
+      td>: ${sql.query}
+
+# テスト対象のテーブルを順に実行（1 PJ に WF が複数あるかもしれない）
++run_workflows:
+  for_each>:
+    workflow: ${workflows}
+  _parallel: false # 並列処理は許可しない
+  _do:
+    +run:
+      call>: ${workflow}
+
+# テーブルを比較
++test_tables:
+  for_each>:
+      sql: ${tests}
+  _parallel: true # 並列処理を許可
+  _do:
+    +test_set:
+      _parallel: true # 2 種類のテストは並列処理を許可
+      +compare:
+        +test_compare:
+          td>: ${sql.query}
+        +check_compare: # レコードが存在したら差があることになるためエラーとする
+          if>: ${td.last_job.num_records > 0}
+          _do:
+            fail>: ${sql.test_table} failed the compare test.
+      +record_num:
+        +test_record_num:
+          td>:
+          query: 'SELECT * FROM (SELECT COUNT(*) AS "result_count" FROM "${sql.test_table}") a, (SELECT COUNT(*) AS "expect_count" FROM "${sql.expect_table}") b'
+          store_last_results: true
+        +check_record_num: # レコード数に差があった場合はエラーとする
+          if>: ${td.last_results.result_count !== td.last_results.expect_count}
+          _do:
+            fail>: ${sql.test_table} failed the records num test.

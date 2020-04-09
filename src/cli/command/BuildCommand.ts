@@ -19,6 +19,7 @@ export class BuildCommand implements CommandInterface {
 
     try {
       const buildManager = new BuildManager(spinnerLog);
+      buildManager.deleteDistDirectory();
       buildManager.build();
 
       spinnerLog.succeed('Workflow builded successfully.');

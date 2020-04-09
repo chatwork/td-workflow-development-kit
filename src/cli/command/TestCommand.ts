@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import { CommandInterface } from './CommandInterface';
-import { Log } from '../../lib/Log';
+import { LogForTest } from '../../lib/Log';
 import { TestManager } from '../../lib/TestManager';
 
 export class TestCommand implements CommandInterface {
@@ -14,7 +14,7 @@ export class TestCommand implements CommandInterface {
   };
 
   private run = async (): Promise<void> => {
-    const log = new Log();
+    const log = new LogForTest();
     log.start('Start workflow test...');
 
     try {

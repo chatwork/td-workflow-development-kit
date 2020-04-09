@@ -3,7 +3,7 @@ import { WorkspaceManager, WorkspaceAssetFilePaths } from '../../src/lib/Workspa
 import { ConfigManager } from '../../src/lib/ConfigManager';
 import { WorkflowManager } from '../../src/lib/WorkflowManager';
 import { File } from '../../src/lib/File';
-import { Log } from '../../src/lib/Log';
+import { LogForTest } from '../../src/lib/Log';
 
 // cSpell:ignore gitignore
 
@@ -40,9 +40,11 @@ describe('TestManager', () => {
     }
   ];
 
-  const log = new Log();
+  const log = new LogForTest();
   log.printText = jest.fn().mockImplementation();
+  log.printBuildMargin = jest.fn().mockImplementation();
   log.printBuildText = jest.fn().mockImplementation();
+  log.printSQLBuildedText = jest.fn().mockImplementation();
 
   workspaceManager.create(
     configManager,
@@ -55,12 +57,7 @@ describe('TestManager', () => {
   describe('generateCreateTableSQLFiles()', () => {
     it('Success', () => {
       const tableNames = ['test_table', 'expect_table'];
-      const testManager = new TestManager(
-        log,
-        directoryPath,
-        directoryPath + '/config.yaml',
-        './test/lib/testManager/.td-wdk'
-      );
+      const testManager = new TestManager(log, directoryPath, directoryPath + '/config.yaml');
       testManager['generateCreateTableSQLFiles']();
 
       tableNames.forEach(tableName => {
@@ -75,12 +72,7 @@ describe('TestManager', () => {
   describe('generateExpectSQLFiles()', () => {
     it('Success', () => {
       const tableNames = ['result_test_table'];
-      const testManager = new TestManager(
-        log,
-        directoryPath,
-        directoryPath + '/config.yaml',
-        './test/lib/testManager/.td-wdk'
-      );
+      const testManager = new TestManager(log, directoryPath, directoryPath + '/config.yaml');
       testManager['generateExpectSQLFiles']();
 
       tableNames.forEach(tableName => {

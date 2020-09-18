@@ -2,8 +2,6 @@ import * as path from 'path';
 import chalk from 'chalk';
 import ora from 'ora';
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 export class Log {
   protected spinner: ora.Ora;
   constructor() {
@@ -26,7 +24,7 @@ export class Log {
     this.spinner.color = color;
     this.spinner.stopAndPersist({
       symbol: symbol,
-      text: message
+      text: message,
     });
   };
 
@@ -45,7 +43,7 @@ export class Log {
       text: `${tag} ${path.join(
         chalk.blackBright(path.dirname(filePath)),
         chalk.bold(path.basename(filePath))
-      )}`
+      )}`,
     });
     this.spinner.color = color;
   };
@@ -55,7 +53,7 @@ export class Log {
     this.spinner.color = 'cyan';
     this.spinner.stopAndPersist({
       symbol: '',
-      text: ''
+      text: '',
     });
   };
 
@@ -91,7 +89,7 @@ export class LogForTest extends Log {
       text: `${tag} ${path.join(
         chalk.blackBright(path.dirname(filePath)),
         chalk.bold(path.basename(filePath))
-      )}`
+      )}`,
     });
     this.spinner.color = color;
   };

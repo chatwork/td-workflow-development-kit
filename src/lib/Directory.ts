@@ -16,17 +16,17 @@ export class Directory {
 
     const scanList = fs.readdirSync(path.join(this.directoryPath, subDirectoryPath), {
       encoding: 'utf8',
-      withFileTypes: true
+      withFileTypes: true,
     });
 
-    scanList.forEach(file => {
+    scanList.forEach((file) => {
       if (file.isDirectory()) {
         const directoryName = file.name;
         const subDirectoryFileList = this.getFileListOfRecursion(
           path.join(subDirectoryPath, directoryName)
         );
 
-        subDirectoryFileList.forEach(file => {
+        subDirectoryFileList.forEach((file) => {
           fileList.push(file);
         });
       } else {

@@ -1,10 +1,10 @@
-import { Command } from 'commander';
+import commander from 'commander';
 import { CommandInterface } from './CommandInterface';
 import { LogForTest } from '../../lib/Log';
 import { TestManager } from '../../lib/TestManager';
 
 export class TestCommand implements CommandInterface {
-  public command = (program: Command): void => {
+  public command = (program: commander.Command): void => {
     program
       .command('test')
       .description('Test workflow at td')

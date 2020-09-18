@@ -19,24 +19,24 @@ describe('Workspace', () => {
       const filePaths: WorkspaceAssetFilePaths = [
         {
           filePath: './test/assets/gitignoreTemplate',
-          targetPath: '/.gitignore'
+          targetPath: '/.gitignore',
         },
         {
           filePath: './test/assets/testTemplate/testSchemaTemplate.yaml',
-          targetPath: '/test/schema/schema.yaml'
+          targetPath: '/test/schema/schema.yaml',
         },
         {
           filePath: './test/assets/testTemplate/expectSchemaTemplate.yaml',
-          targetPath: '/test/schema/expect_schema.yaml'
+          targetPath: '/test/schema/expect_schema.yaml',
         },
         {
           filePath: './test/assets/testTemplate/testDataTemplate.csv',
-          targetPath: '/test/csv/test_table.csv'
+          targetPath: '/test/csv/test_table.csv',
         },
         {
           filePath: './test/assets/testTemplate/expectDataTemplate.csv',
-          targetPath: '/test/csv/expect_table.csv'
-        }
+          targetPath: '/test/csv/expect_table.csv',
+        },
       ];
 
       workspaceManager.create(
@@ -55,7 +55,7 @@ describe('Workspace', () => {
       const workflowFile = new File('./test/lib/workspaceManager/td-wdk/src/sample.dig');
       expect(workflowTemplateFile.read()).toBe(workflowFile.read());
 
-      filePaths.forEach(filePath => {
+      filePaths.forEach((filePath) => {
         const templateFile = new File(filePath.filePath);
         const file = new File('./test/lib/workspaceManager/td-wdk' + filePath.targetPath);
         expect(templateFile.read()).toBe(file.read());

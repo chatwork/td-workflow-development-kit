@@ -1,10 +1,10 @@
-import { Command } from 'commander';
+import commander from 'commander';
 import { CommandInterface } from './CommandInterface';
 import { Log } from '../../lib/Log';
 import { DeployManager } from '../../lib/DeployManager';
 
 export class DeployCommand implements CommandInterface {
-  public command = (program: Command): void => {
+  public command = (program: commander.Command): void => {
     program
       .command('deploy')
       .description('Deploy workflow for td')

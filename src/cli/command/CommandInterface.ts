@@ -1,5 +1,5 @@
-import { Command } from 'commander';
+import commander from 'commander';
 
 export interface CommandInterface {
-  command(program: Command): void;
+  command(program: commander.Command): void;
 }

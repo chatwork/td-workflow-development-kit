@@ -4,8 +4,6 @@ import * as yaml from 'yaml';
 import { File } from './File';
 import { TestConfig } from './ConfigManager';
 
-//cSpell:word VARCHAR
-
 const allowType: readonly string[] = ['INT', 'DOUBLE', 'VARCHAR'] as const; // 大文字で定義
 
 type Schema = {
@@ -36,7 +34,7 @@ export class SQL {
   };
 
   private getCreateTableSQL = (tableName: string, schemas: Schema[]): string => {
-    const schemaForCreateTable = schemas.map(schema => {
+    const schemaForCreateTable = schemas.map((schema) => {
       // Schema の型定義が規定通りかチェック（小文字でも OK とする）
       if (!allowType.includes(schema.type.toUpperCase() as Schema['type'])) {
         throw new Error(
@@ -55,14 +53,14 @@ export class SQL {
   };
 
   private getInsertIntoSQL = (tableName: string, schemas: Schema[], csvText: string): string => {
-    const schemaForInsertInto = schemas.map(schema => {
+    const schemaForInsertInto = schemas.map((schema) => {
       return `${schema.name}`;
     });
 
     const csvData = csv(csvText, { columns: true }) as CSVRawData[];
 
-    const insertValueTexts = csvData.map(data => {
-      const dataValues = schemas.map(schema => {
+    const insertValueTexts = csvData.map((data) => {
+      const dataValues = schemas.map((schema) => {
         // Schema の配列を回してデータを取得してるが、CSV データで列が見つからない場合はエラーとする
         if (!data[schema.name]) {
           throw new Error(
@@ -91,7 +89,7 @@ export class SQL {
 
   public generateExpectSQLFile = (config: TestConfig['expects'][0]): void => {
     const schemas = config.columns;
-    const schemaWithQuote = schemas.map(schema => `"${schema}"`);
+    const schemaWithQuote = schemas.map((schema) => `"${schema}"`);
 
     const sqlText = `SELECT ${schemaWithQuote.join(', ')} FROM "${
       config.srcTable

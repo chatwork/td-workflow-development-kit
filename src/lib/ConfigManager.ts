@@ -73,7 +73,7 @@ export class ConfigManager {
 
     return {
       projectName: rawConfig.env[env].projectName,
-      param: this.getConfigParameter(rawConfig.env[env].param)
+      param: this.getConfigParameter(rawConfig.env[env].param),
     };
   };
 
@@ -87,7 +87,7 @@ export class ConfigManager {
   ): ConfigOutputParameter => {
     let output: ConfigOutputParameter = {};
 
-    Object.keys(input).forEach(key => {
+    Object.keys(input).forEach((key) => {
       const keyWithPrefix = prefix !== '' ? `${prefix}.${key}` : key;
 
       // 設定ファイルは配列を受け付けない
@@ -104,7 +104,7 @@ export class ConfigManager {
         output = Object.assign(output, subObject);
       } else {
         output = Object.assign(output, {
-          [keyWithPrefix]: input[key]
+          [keyWithPrefix]: input[key],
         });
       }
     });

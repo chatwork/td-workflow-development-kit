@@ -20,24 +20,24 @@ describe('TestManager', () => {
   const filePaths: WorkspaceAssetFilePaths = [
     {
       filePath: './test/assets/gitignoreTemplate',
-      targetPath: '/.gitignore'
+      targetPath: '/.gitignore',
     },
     {
       filePath: './test/assets/testTemplate/testSchemaTemplate.yaml',
-      targetPath: '/test/schema/test_schema.yaml'
+      targetPath: '/test/schema/test_schema.yaml',
     },
     {
       filePath: './test/assets/testTemplate/expectSchemaTemplate.yaml',
-      targetPath: '/test/schema/expect_schema.yaml'
+      targetPath: '/test/schema/expect_schema.yaml',
     },
     {
       filePath: './test/assets/testTemplate/testDataTemplate.csv',
-      targetPath: '/test/csv/test_table.csv'
+      targetPath: '/test/csv/test_table.csv',
     },
     {
       filePath: './test/assets/testTemplate/expectDataTemplate.csv',
-      targetPath: '/test/csv/expect_table.csv'
-    }
+      targetPath: '/test/csv/expect_table.csv',
+    },
   ];
 
   const log = new LogForTest();
@@ -61,7 +61,7 @@ describe('TestManager', () => {
       testManager['getApiKey'] = jest.fn().mockReturnValue('hoge');
       testManager['generateCreateTableSQLFiles']();
 
-      tableNames.forEach(tableName => {
+      tableNames.forEach((tableName) => {
         const buildFile = new File(directoryPath + `/test/package/sql/${tableName}.sql`);
         const expectFile = new File(`./test/lib/testManager/${tableName}.sql`);
 
@@ -77,7 +77,7 @@ describe('TestManager', () => {
       testManager['getApiKey'] = jest.fn().mockReturnValue('hoge');
       testManager['generateExpectSQLFiles']();
 
-      tableNames.forEach(tableName => {
+      tableNames.forEach((tableName) => {
         const buildFile = new File(directoryPath + `/test/package/sql/expect/${tableName}.sql`);
         const expectFile = new File(`./test/lib/testManager/${tableName}.sql`);
 

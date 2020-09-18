@@ -14,7 +14,7 @@ export class DeployManager {
     this.configManager = new ConfigManager(configFilePath);
 
     this.apiKey = {
-      API_TOKEN: this.getApiKey(apiKeyFilePath)
+      API_TOKEN: this.getApiKey(apiKeyFilePath),
     };
   }
 

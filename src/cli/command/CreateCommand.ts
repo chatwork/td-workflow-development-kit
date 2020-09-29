@@ -1,10 +1,10 @@
-import { Command } from 'commander';
+import commander from 'commander';
 import { CommandInterface } from './CommandInterface';
 import { Log } from '../../lib/Log';
 import { WorkspaceManager } from '../../lib/WorkspaceManager';
 
 export class CreateCommand implements CommandInterface {
-  public command = (program: Command): void => {
+  public command = (program: commander.Command): void => {
     program
       .command('create')
       .description('Create workspace')

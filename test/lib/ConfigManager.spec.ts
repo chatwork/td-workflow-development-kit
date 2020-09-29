@@ -11,8 +11,8 @@ describe('ConfigManager', () => {
         param: {
           'td.database': 'dev_db',
           'td.table': 'dev_table',
-          'td.result_table': 'result_dev_table'
-        }
+          'td.result_table': 'result_dev_table',
+        },
       };
 
       const configManager = new ConfigManager('./test/lib/configManager/config.yaml');
@@ -30,8 +30,8 @@ describe('ConfigManager', () => {
         param: {
           'td.database': 'dev_db',
           'td.table': 'dev_table',
-          'td.result_table': 'result_dev_table'
-        }
+          'td.result_table': 'result_dev_table',
+        },
       };
 
       const configManager = new ConfigManager('./test/lib/configManager/config.yaml');
@@ -46,8 +46,8 @@ describe('ConfigManager', () => {
         param: {
           'td.database': 'sample_db',
           'td.table': 'sample_table',
-          'td.result_table': 'result_sample_table'
-        }
+          'td.result_table': 'result_sample_table',
+        },
       };
 
       const configManager = new ConfigManager('./test/lib/configManager/config.yaml');
@@ -65,8 +65,8 @@ describe('ConfigManager', () => {
         param: {
           'td.database': 'test_db',
           'td.table': 'test_table',
-          'td.result_table': 'result_test_table'
-        }
+          'td.result_table': 'result_test_table',
+        },
       };
 
       const configManager = new ConfigManager('./test/lib/configManager/config.yaml');
@@ -100,28 +100,28 @@ describe('ConfigManager', () => {
         envParam: 'test',
         workflows: [
           {
-            filePath: 'sample.dig'
-          }
+            filePath: 'sample.dig',
+          },
         ],
         tables: [
           {
             name: 'test_table',
             dataFilePath: 'csv/test_table.csv',
-            schemaFilePath: 'schema/test_schema.yaml'
+            schemaFilePath: 'schema/test_schema.yaml',
           },
           {
             name: 'expect_table',
             dataFilePath: 'csv/expect_table.csv',
-            schemaFilePath: 'schema/expect_schema.yaml'
-          }
+            schemaFilePath: 'schema/expect_schema.yaml',
+          },
         ],
         expects: [
           {
             srcTable: 'result_test_table',
             expectTable: 'expect_table',
-            columns: ['name', 'total']
-          }
-        ]
+            columns: ['name', 'total'],
+          },
+        ],
       };
 
       expect(configManager.getTestParam()).toEqual(result);
@@ -138,8 +138,8 @@ describe('ConfigManager', () => {
         param: {
           'td.database': 'dev_db',
           'td.table': 'dev_table',
-          'td.result_table': 'result_dev_table'
-        }
+          'td.result_table': 'result_dev_table',
+        },
       };
 
       configManager.init();

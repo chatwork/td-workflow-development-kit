@@ -15,7 +15,7 @@ export class File {
     const readText = fs
       .readFileSync(this.filePath, { encoding: 'utf8' })
       .toString()
-      .replace(/\r\n?/g, '\n'); // 改行コードを \n に統一する
+      .replace(/\r\n?/g, '\n'); // 改行コードを \n に統一する
 
     // ファイルの最終文字が改行コードの場合はそれを削除する
     if (readText.slice(-1) === '\n') {

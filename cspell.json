@@ -1,0 +1,14 @@
+{
+  "version": "0.1",
+  "language": "en",
+  "words": [
+      "USERPROFILE",
+      "VARCHAR"
+  ],
+  "flagWords": [
+      "hte"
+  ],
+  "ignorePaths": [
+      "tsconfig.json"
+  ]
+}

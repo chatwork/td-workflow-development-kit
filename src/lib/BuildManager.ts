@@ -21,7 +21,7 @@ export class BuildManager {
     const fileList = this.getSrcFileList(srcPath);
 
     this.log.printBuildMargin();
-    fileList.forEach(filePath => {
+    fileList.forEach((filePath) => {
       this.buildFile(filePath, srcPath, distPath, config);
     });
     this.log.printBuildMargin();
@@ -61,7 +61,7 @@ export class BuildManager {
   private getReplacedFileData = (fileData: string, config: Config): string => {
     const configParam = config.param;
 
-    Object.keys(configParam).forEach(key => {
+    Object.keys(configParam).forEach((key) => {
       const regExp = new RegExp(`###${key}###`, 'g');
       fileData = fileData.replace(regExp, String(configParam[key]));
     });

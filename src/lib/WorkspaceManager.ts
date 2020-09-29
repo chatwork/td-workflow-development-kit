@@ -3,8 +3,6 @@ import { File } from './File';
 import { ConfigManager } from './ConfigManager';
 import { WorkflowManager } from './WorkflowManager';
 
-// cSpell:ignore gitignore
-
 export type WorkspaceAssetFilePaths = {
   filePath: string;
   targetPath: string;
@@ -21,24 +19,24 @@ export class WorkspaceManager {
     filePaths: WorkspaceAssetFilePaths = [
       {
         filePath: '/assets/gitignoreTemplate',
-        targetPath: '/.gitignore'
+        targetPath: '/.gitignore',
       },
       {
         filePath: '/assets/testTemplate/testSchemaTemplate.yaml',
-        targetPath: '/test/schema/test_schema.yaml'
+        targetPath: '/test/schema/test_schema.yaml',
       },
       {
         filePath: '/assets/testTemplate/expectSchemaTemplate.yaml',
-        targetPath: '/test/schema/expect_schema.yaml'
+        targetPath: '/test/schema/expect_schema.yaml',
       },
       {
         filePath: '/assets/testTemplate/testDataTemplate.csv',
-        targetPath: '/test/csv/test_table.csv'
+        targetPath: '/test/csv/test_table.csv',
       },
       {
         filePath: '/assets/testTemplate/expectDataTemplate.csv',
-        targetPath: '/test/csv/expect_table.csv'
-      }
+        targetPath: '/test/csv/expect_table.csv',
+      },
     ]
   ): void => {
     // make ConfigFile
@@ -48,7 +46,7 @@ export class WorkspaceManager {
     workflowManager.init(workflowFilePath);
 
     // make .gitignore, schema.yaml, test-table.csv ete...
-    filePaths.forEach(filePath => {
+    filePaths.forEach((filePath) => {
       this.initFile(filePath.filePath, filePath.targetPath);
     });
   };

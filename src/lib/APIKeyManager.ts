@@ -1,7 +1,5 @@
 import { File } from './File';
 
-// cSpell:ignore USERPROFILE
-
 export class APIKeyManager {
   constructor(
     private filePath = `${

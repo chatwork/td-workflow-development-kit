@@ -5,7 +5,7 @@ import {
   TreasureData,
   TreasureDataSecret,
   TreasureDataGetExecutedWorkflowTasksOutput,
-  TreasureDataGetExecutedWorkflowTasksOutputElement
+  TreasureDataGetExecutedWorkflowTasksOutputElement,
 } from 'td-workflow-client';
 import { ConfigManager, Config, TestConfig } from './ConfigManager';
 import { BuildManager } from './BuildManager';
@@ -15,8 +15,6 @@ import { Directory } from './Directory';
 import { SQL } from './SQL';
 import { File } from './File';
 import { LogForTest } from './Log';
-
-// cSpell:word camelcase
 
 type DefineParam = {
   timezone: string;
@@ -89,7 +87,7 @@ export class TestManager {
 
   private getApiKey = (): TreasureDataSecret => {
     return {
-      API_TOKEN: this.apiKeyManager.get()
+      API_TOKEN: this.apiKeyManager.get(),
     };
   };
 
@@ -134,7 +132,7 @@ export class TestManager {
   };
 
   private generateCreateTableSQLFiles = (): void => {
-    this.config.tables.forEach(table => {
+    this.config.tables.forEach((table) => {
       if (!table.name.match(/^([a-z0-9_]+)$/)) {
         // TD の table 命名規則にマッチするか確認
         throw new Error(
@@ -154,7 +152,7 @@ export class TestManager {
   };
 
   private generateExpectSQLFiles = (): void => {
-    this.config.expects.forEach(expect => {
+    this.config.expects.forEach((expect) => {
       const sql = new SQL(
         path.join(this.directoryPath, this.resourceRootPath),
         path.join(this.directoryPath, this.targetPackagePath)
@@ -182,7 +180,7 @@ export class TestManager {
     const tables = this.config.tables.map((table): DefineParam['_export']['tables'][0] => {
       return {
         table: table.name,
-        query: `sql/${table.name}.sql`
+        query: `sql/${table.name}.sql`,
       };
     });
 
@@ -194,11 +192,9 @@ export class TestManager {
 
     const tests = this.config.expects.map((expect): DefineParam['_export']['tests'][0] => {
       return {
-        // eslint-disable-next-line @typescript-eslint/camelcase
         test_table: expect.srcTable,
-        // eslint-disable-next-line @typescript-eslint/camelcase
         expect_table: expect.expectTable,
-        query: `sql/expect/${expect.srcTable}.sql`
+        query: `sql/expect/${expect.srcTable}.sql`,
       };
     });
 
@@ -206,12 +202,12 @@ export class TestManager {
       timezone: 'Asia/Tokyo',
       _export: {
         td: {
-          database: this.config.database
+          database: this.config.database,
         },
         tables: tables,
         workflows: workflows,
-        tests: tests
-      }
+        tests: tests,
+      },
     };
 
     const targetWorkflowFile = new File(
@@ -239,7 +235,7 @@ export class TestManager {
 
   private watchWorkflow = async (attemptId: string): Promise<void> => {
     const sleep = async (time: number): Promise<void> => {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         setTimeout(() => {
           resolve();
         }, time);
@@ -247,17 +243,18 @@ export class TestManager {
     };
 
     const treasureData = new TreasureData(this.getApiKey());
+    /*eslint no-constant-condition: ["error", { "checkLoops": false }]*/
     while (true) {
       const response = await treasureData.getExecutedWorkflowStatus(attemptId);
       const workflowDetail = (await treasureData.getExecutedWorkflowTasks(
         attemptId
       )) as TasksOutputElement;
-      const numTaskSucceed = workflowDetail.tasks.filter(task => task.state === 'success').length;
+      const numTaskSucceed = workflowDetail.tasks.filter((task) => task.state === 'success').length;
 
       this.log.changeText(`Testing workflow... (${numTaskSucceed}/${workflowDetail.tasks.length})`);
 
       if (response.done && !response.success) {
-        const errorTask = workflowDetail.tasks.filter(task => task.state === 'error');
+        const errorTask = workflowDetail.tasks.filter((task) => task.state === 'error');
         if (!errorTask.length) throw new Error('Unknown Error');
         throw new Error(this.getErrorMessage(errorTask));
       }

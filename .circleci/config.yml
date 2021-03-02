@@ -3,13 +3,11 @@
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
 #
 
-# cSpell:ignore circleci, mkdir
-
 version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:10.15.3
+      - image: circleci/node:12.18.0
     working_directory: /home/circleci/project
     steps:
       - checkout

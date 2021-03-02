@@ -2,13 +2,17 @@
   "version": "0.1",
   "language": "en",
   "words": [
-      "USERPROFILE",
-      "VARCHAR"
+    "chatwork",
+    "circleci",
+    "mkdir",
+    "hogehoge",
+    "USERPROFILE",
+    "VARCHAR"
   ],
   "flagWords": [
-      "hte"
+    "hte"
   ],
   "ignorePaths": [
-      "tsconfig.json"
+    "tsconfig.json"
   ]
 }
